@@ -77,4 +77,29 @@ public class Template {
         }
     }
 
+ /*
+     * Example
+     * 
+     * inicializar
+     * 
+     * ArrayList<Long> arr = new ArrayList<>();
+     * BinaryOperator<Long> f = (a, b) -> Math.min(a, b);
+     * Long neutro = Long.valueOf(1000000007);
+     * SegmentTree<Long> st = new SegmentTree<Long>(arr, f, neutro);
+     * 
+     * 
+     * 
+     * while (m-- > 0) {
+     * int o = en.nextInt(), l = en.nextInt(), r = en.nextInt();
+     * if (o == 1) {
+     * Long aux = (long) r;
+     * st.upd(l, aux);
+     * } else {
+     * r--;
+     * Long qu = st.query(l, r);
+     * sa.println(qu == null ? 0 : qu);
+     * }
+     * }
+     */
+
 }
