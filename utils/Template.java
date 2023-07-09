@@ -1,40 +1,47 @@
-
 import java.io.*;
 import java.util.*;
-import java.util.function.BinaryOperator;
 
 public class Template {
 
-    // static FastReader en = new FastReader();
-    static FastWriter sa = new FastWriter();
-    static InputReader en = new InputReader();
+    static final FastWriter sa = new FastWriter();
+    static final FastReader en = new FastReader();
+    // static final PrintWriter pw = new PrintWriter(System.out);
 
     static void solve() throws IOException {
-
-
-        
+        int  n = en.nextInt();
+        sa.println(n);
     }
 
     public static void main(String[] args) throws IOException {
-        long t;
-        t = 1;
+        long t = 1;
+        // t = en.nextLong();
         while (t-- > 0) {
             solve();
         }
         sa.close();
-
+        // pw.close();
     }
 
-    public static double log2(int x) {
-        return Math.log(x) / Math.log(2);
+    static long gcd(long a, long b) {
+        return b == 0 ? (a < 0 ? -a : a) : gcd(b, a % b);
+    }
+
+    static long lcm(long a, long b) {
+        long lcm = (a / gcd(a, b)) * b;
+        return lcm > 0 ? lcm : -lcm;
+    }
+
+    static double log(int x) {
+        /*
+         * number of digits = log10(x) + 1
+         * number of bits = log2(x) + 1
+         * number of times that we have to divide x by k = logk(x)
+         */
+        // ==== log(x) / log(base);
+        return Math.log(x) / Math.log(10);
     }
 
     static void sort(int[] x) {
-        shuffle(x);
-        Arrays.sort(x);
-    }
-
-    static void sort(Object[] x) {
         shuffle(x);
         Arrays.sort(x);
     }
@@ -43,7 +50,6 @@ public class Template {
         shuffle(x);
         Arrays.sort(x);
     }
-
     static void shuffle(int[] a) {
         Random get = new Random();
         for (int i = 0; i < a.length; i++) {
@@ -54,15 +60,7 @@ public class Template {
         }
     }
 
-    static void shuffle(Object[] a) {
-        Random get = new Random();
-        for (int i = 0; i < a.length; i++) {
-            int r = get.nextInt(a.length);
-            int temp = (int) a[i];
-            a[i] = a[r];
-            a[r] = temp;
-        }
-    }
+    
 
     static void shuffle(long[] a) {
         Random get = new Random();
@@ -74,7 +72,7 @@ public class Template {
         }
     }
 
-    static int lower_bound(List<Integer> a, long x) {
+    static int lower_bound(List<Long> a, long x) {
         int l = -1, r = a.size();
         while (l + 1 < r) {
             int m = (l + r) >>> 1;
@@ -86,7 +84,7 @@ public class Template {
         return r;
     }
 
-    static int upper_bound(List<Integer> a, int x) {
+    static int upper_bound(List<Long> a, long x) {
         int l = -1, r = a.size();
         while (l + 1 < r) {
             int m = (l + r) >>> 1;
@@ -120,9 +118,49 @@ public class Template {
         }
     }
 
-    
+    static class FastReader {
+        BufferedReader br;
+        StringTokenizer st;
 
-    static class InputReader {
+        public FastReader() {
+            br = new BufferedReader(new InputStreamReader(System.in));
+        }
+
+        String next() {
+            while (st == null || !st.hasMoreElements()) {
+                try {
+                    st = new StringTokenizer(br.readLine());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+
+        int nextInt() {
+            return Integer.parseInt(next());
+        }
+
+        long nextLong() {
+            return Long.parseLong(next());
+        }
+
+        double nextDouble() {
+            return Double.parseDouble(next());
+        }
+
+        String nextLine() {
+            String str = "";
+            try {
+                str = br.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return str;
+        }
+    }
+
+     static class InputReader {
         private InputStream stream;
         private byte[] buf = new byte[1024];
         private int curChar;
@@ -279,5 +317,72 @@ public class Template {
         }
     }
 
-   
+    static class pair<FIRST extends Comparable<FIRST>, SECOND extends Comparable<SECOND>>
+            implements Comparable<pair<FIRST, SECOND>> {
+
+        public final FIRST first;
+        public final SECOND second;
+
+        private pair(FIRST first, SECOND second) {
+            this.first = first;
+            this.second = second;
+        }
+
+        public static <FIRST extends Comparable<FIRST>, SECOND extends Comparable<SECOND>> pair<FIRST, SECOND> of(
+                FIRST first, SECOND second) {
+            return new pair<>(first, second);
+        }
+
+        @SuppressWarnings("NullableProblems")
+        @Override
+        public int compareTo(pair<FIRST, SECOND> o) {
+            int cmp = compare(first, o.first);
+            return cmp == 0 ? compare(second, o.second) : cmp;
+        }
+
+        private <T extends Comparable<T>> int compare(T o1, T o2) {
+            if (o1 == null) {
+                if (o2 == null) {
+                    return 0;
+                } else {
+                    return -1;
+                }
+            } else if (o2 == null) {
+                return +1;
+            } else {
+                return o1.compareTo(o2);
+            }
+        }
+
+        @Override
+        public int hashCode() {
+            return 31 * hashcode(first) + hashcode(second);
+        }
+
+        private static int hashcode(Object o) {
+            return o == null ? 0 : o.hashCode();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof pair)) {
+                return false;
+            }
+            if (this == obj) {
+                return true;
+            }
+            return equal(first, ((pair) obj).first)
+                    && equal(second, ((pair) obj).second);
+        }
+
+        private boolean equal(Object o1, Object o2) {
+            return o1 == null ? o2 == null : (o1 == o2 || o1.equals(o2));
+        }
+
+        @Override
+        public String toString() {
+            return "(" + first + ", " + second + ')';
+        }
+    }
+
 }
