@@ -1,30 +1,32 @@
-class Disjkstra{
+import java.util.*;
+
+public class Dijkstra {
 
     static class Edge {
         int from, to, weight;
- 
+
         public Edge(int from, int to, int weight) {
             this.from = from;
             this.to = to;
             this.weight = weight;
         }
- 
+
         @Override
         public String toString() {
             return "from : " + from + " ,to: " + to + " weight: " + weight;
         }
     }
- 
+
     static class Vertex {
         int nodeId;
         long cost; // can overflow int
- 
+
         public Vertex(int nodeId, long cost) {
             this.nodeId = nodeId;
             this.cost = cost;
         }
     }
- 
+
     static private LinkedList<Vertex>[] getGraphFromEdges(Edge[] edges, int n) {
         LinkedList<Vertex>[] graph = new LinkedList[n + 1];
         for (int i = 1; i <= n; i++) {
@@ -35,7 +37,7 @@ class Disjkstra{
         }
         return graph;
     }
- 
+
     static private LinkedList<Integer> getShortestPath(Edge[] edges, int rootNode, int n) {
         boolean fronteer[] = new boolean[n + 1];// assuming base 1 index
         int path[] = new int[n + 1];
@@ -67,31 +69,34 @@ class Disjkstra{
         }
         return shortestPath;
     }
- 
 
-    /*  Ejemplo de uso
+    /*
+     * Ejemplo de uso
      * 
-     *  https://codeforces.com/contest/20/problem/C
-     *  C. Dijkstra?
+     * https://codeforces.com/contest/20/problem/C
+     * C. Dijkstra?
      */
-    static void solve() throws IOException {
+    
+    public static void main(String []args) {
+        Scanner en = new Scanner(System.in);
         int n = en.nextInt(), m = en.nextInt();
-        Edge edges [] = new Edge[2*m];
-        for(int i =0; i<m; i++){
+        Edge edges[] = new Edge[2 * m];
+        for (int i = 0; i < m; i++) {
             int inicio = en.nextInt(), fin = en.nextInt(), peso = en.nextInt();
             edges[i] = new Edge(inicio, fin, peso);
-            edges[i+m] = new Edge(fin, inicio, peso);
+            edges[i + m] = new Edge(fin, inicio, peso);
         }
- 
+
         LinkedList<Integer> path = getShortestPath(edges, 1, n);
-        if(path.isEmpty() || path.getFirst()!=1) sa.println(-1);
-        else{
+        if (path.isEmpty() || path.getFirst() != 1)
+            System.out.println(-1);
+        else {
             StringBuilder sb = new StringBuilder();
             for (int i : path) {
                 sb.append(i);
                 sb.append(' ');
             }
-            sa.println(sb);
+            System.out.println(sb);
         }
     }
 }
