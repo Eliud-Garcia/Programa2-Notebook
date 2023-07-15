@@ -2,101 +2,103 @@ import java.util.*;
 
 public class Dijkstra {
 
-    static class Edge {
-        int from, to, weight;
+    static class Pair {
+        int first;
+        int second;
 
-        public Edge(int from, int to, int weight) {
-            this.from = from;
-            this.to = to;
-            this.weight = weight;
+        Pair(int first, int second) {
+            this.first = first;
+            this.second = second;
         }
 
         @Override
         public String toString() {
-            return "from : " + from + " ,to: " + to + " weight: " + weight;
+            return "(" + first + " , " + second + ")";
         }
     }
 
-    static class Vertex {
-        int nodeId;
-        long cost; // can overflow int
+    static final int MAXN = 100003;
+    static final int INF = Integer.MAX_VALUE;
 
-        public Vertex(int nodeId, long cost) {
-            this.nodeId = nodeId;
-            this.cost = cost;
-        }
-    }
+    static List<List<Pair>> adjList;
+    static int n;
+    static int[] dist = new int[MAXN];
+    static int[] par = new int[MAXN];
+    static BitSet isDone = new BitSet(MAXN);
 
-    static private LinkedList<Vertex>[] getGraphFromEdges(Edge[] edges, int n) {
-        LinkedList<Vertex>[] graph = new LinkedList[n + 1];
-        for (int i = 1; i <= n; i++) {
-            graph[i] = new LinkedList<Vertex>();
-        }
-        for (Edge edge : edges) {
-            graph[edge.from].add(new Vertex(edge.to, edge.weight));
-        }
-        return graph;
-    }
+    // dijkstra(int source, int des)
+    static boolean dijkstra(int s, int t) {
+        PriorityQueue<Pair> pq = new PriorityQueue<>(Comparator.comparingInt(p -> p.first));
+        Arrays.fill(dist, INF);
 
-    static private LinkedList<Integer> getShortestPath(Edge[] edges, int rootNode, int n) {
-        boolean fronteer[] = new boolean[n + 1];// assuming base 1 index
-        int path[] = new int[n + 1];
-        Arrays.fill(path, -1);
-        long distance[] = new long[n + 1];
-        Arrays.fill(distance, Long.MAX_VALUE / 10);
-        PriorityQueue<Vertex> pQueue = new PriorityQueue<Vertex>(n, (a, b) -> Long.compare(a.cost, b.cost));
-        fronteer[rootNode] = true;
-        distance[rootNode] = 0;
-        LinkedList<Vertex>[] graph = getGraphFromEdges(edges, n);
-        pQueue.add(new Vertex(1, 0));
-        while (!pQueue.isEmpty()) {
-            Vertex u = (Vertex) pQueue.poll();
-            for (Vertex v : graph[u.nodeId]) {
-                if (!fronteer[v.nodeId] && distance[u.nodeId] + v.cost < distance[v.nodeId]) {
-                    distance[v.nodeId] = distance[u.nodeId] + v.cost;
-                    path[v.nodeId] = u.nodeId;
-                    pQueue.add(new Vertex(v.nodeId, distance[v.nodeId]));
+        pq.add(new Pair(0, s));
+        dist[s] = 0;
+        par[s] = -1;
+
+        while (!pq.isEmpty()) {
+            int u = pq.poll().second;
+
+            if (u == t)
+                return true;
+
+            isDone.set(u, true);
+
+            for (Pair pr : adjList.get(u)) {
+                int v = pr.first;
+                int w = pr.second;
+
+                if (!isDone.get(v) && dist[u] + w < dist[v]) {
+                    dist[v] = dist[u] + w;
+                    pq.add(new Pair(dist[v], v));
+                    par[v] = u;
                 }
             }
-            fronteer[u.nodeId] = true;// add it to frounter
         }
-        LinkedList<Integer> shortestPath = new LinkedList<>();
-        shortestPath.add(n);
-        int idx = n;
-        while (path[idx] != -1) {
-            shortestPath.addFirst(path[idx]);
-            idx = path[idx];
-        }
-        return shortestPath;
+
+        return false;
     }
 
-    /*
-     * Ejemplo de uso
-     * 
-     * https://codeforces.com/contest/20/problem/C
-     * C. Dijkstra?
+
+    /*      Dijkstra
+     *      shortest path undirected graph
+     *      https://codeforces.com/contest/20/problem/C
      */
-    
-    public static void main(String []args) {
-        Scanner en = new Scanner(System.in);
-        int n = en.nextInt(), m = en.nextInt();
-        Edge edges[] = new Edge[2 * m];
-        for (int i = 0; i < m; i++) {
-            int inicio = en.nextInt(), fin = en.nextInt(), peso = en.nextInt();
-            edges[i] = new Edge(inicio, fin, peso);
-            edges[i + m] = new Edge(fin, inicio, peso);
+
+    static void solve() throws IOException {
+        n = en.nextInt();
+        int m = en.nextInt();
+
+        adjList = new ArrayList<>(n + 3);
+        for (int i = 0; i < n + 3; i++) {
+            adjList.add(new ArrayList<>());
         }
 
-        LinkedList<Integer> path = getShortestPath(edges, 1, n);
-        if (path.isEmpty() || path.getFirst() != 1)
-            System.out.println(-1);
-        else {
-            StringBuilder sb = new StringBuilder();
-            for (int i : path) {
-                sb.append(i);
-                sb.append(' ');
+        dist = new int[MAXN];
+        par = new int[MAXN];
+        isDone = new BitSet(MAXN);
+
+        int u, v, w;
+        for (int i = 0; i < m; i++) {
+            u = en.nextInt();
+            v = en.nextInt();
+            w = en.nextInt();
+            adjList.get(u).add(new Pair(v, w));
+            adjList.get(v).add(new Pair(u, w));
+        }
+        //path is found
+        if (dijkstra(1, n)) {
+            StringBuilder ans = new StringBuilder();
+            List<Integer> path = new ArrayList<>();
+            for (v = n; v != -1; v = par[v]) {
+                path.add(v);
             }
-            System.out.println(sb);
+            //reversing path
+            for (int i = path.size()-1; i >=0; i--) {
+                ans.append(path.get(i)).append(" ");
+            }
+            sa.println(ans);
+        } else {
+            sa.println("-1");
         }
     }
 }
