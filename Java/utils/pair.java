@@ -27,6 +27,18 @@ static class pair<F extends Comparable<F>, S extends Comparable<S>> implements C
         }
 
         @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null || getClass() != obj.getClass()) {
+                return false;
+            }
+            pair<?, ?> other = (pair<?, ?>) obj;
+            return Objects.equals(first, other.first) && Objects.equals(second, other.second);
+        }
+
+        @Override
         public int hashCode() {
             return 31 * first.hashCode() + second.hashCode();
         }
