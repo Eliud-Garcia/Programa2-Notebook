@@ -1,24 +1,5 @@
-public class Template {
 
-    public static void main(String[] args) {
-        BinaryOperator<Long> oper = (a, b) -> Math.min(a, b); //define la operacion del segmentTree
-        Long neutro = Long.valueOf(1000000007); // Neutro 
-        SegmentTree<Long> st = new SegmentTree<Long>(arr, oper, neutro); // Recibe una List<>, BinaryOperator<> y el neutro
-        
-        //ejemplo de uso
-        m= 1;
-        while (m-- > 0) {
-            int o = en.nextInt(), l = en.nextInt(), r = en.nextInt();
-            if (o == 1) {
-                Long aux = (long) r;
-                st.upd(l, aux);
-            } else {
-                r--;
-                Long qu = st.query(l, r);
-                sa.println(qu == null ? 0 : qu); // importante validar que no sea null
-            }
-        }
-    }
+   
 
     static class SegmentTree<T> {
         int n;
@@ -102,4 +83,3 @@ public class Template {
      * }
      */
 
-}
