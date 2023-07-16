@@ -1,3 +1,7 @@
+
+
+//se puede usar en cualquier estructura
+
 static class pair<F extends Comparable<F>, S extends Comparable<S>> implements Comparable<pair<F, S>> {
         F first;
         S second;
