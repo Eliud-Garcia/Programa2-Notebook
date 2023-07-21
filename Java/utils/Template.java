@@ -1,5 +1,6 @@
-import java.io.*;
+import static java.lang.Math.*;
 import java.util.*;
+import java.io.*;
 
 public class Template {
 
