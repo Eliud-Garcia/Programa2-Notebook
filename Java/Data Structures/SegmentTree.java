@@ -52,34 +52,21 @@
         void upd(int pos, T val) {
             upd(1, 0, n - 1, pos, val);
         }
-
+        // l inclusive  r exclusive
         T query(int l, int r) {
             return query(1, 0, n - 1, l, r);
         }
     }
 
- /*
-     * Example
-     * 
-     * inicializar
-     * 
-     * ArrayList<Long> arr = new ArrayList<>();
-     * BinaryOperator<Long> f = (a, b) -> Math.min(a, b);
-     * Long neutro = Long.valueOf(1000000007);
-     * SegmentTree<Long> st = new SegmentTree<Long>(arr, f, neutro);
-     * 
-     * 
-     * 
-     * while (m-- > 0) {
-     * int o = en.nextInt(), l = en.nextInt(), r = en.nextInt();
-     * if (o == 1) {
-     * Long aux = (long) r;
-     * st.upd(l, aux);
-     * } else {
-     * r--;
-     * Long qu = st.query(l, r);
-     * sa.println(qu == null ? 0 : qu);
-     * }
-     * }
+
+     //Example
+     
+     /* 
+     ArrayList<Long> arr = new ArrayList<>();
+     BinaryOperator<Long> oper = (a, b) -> Math.min(a, b);
+     Long neutro = Long.valueOf(1000000007);
+     SegmentTree<Long> st = new SegmentTree<Long>(arr, oper, neutro);
+     Long QUERY = st.query(l, r);
+     System.out.println(QUERY == null ? 0 : QUERY); -> validar query que no sea null
      */
 
