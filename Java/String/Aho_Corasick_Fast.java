@@ -1,13 +1,19 @@
+ // Aho_corasick fast
+
+    //para poder imprimir las palabras
+    //que van apareciendo -> crear ArrayList<String> p;
 
 
-//Aho_corasick mas rapido
+    static class Aho_Corasick {
 
-static class Aho_Corasick {
         final int N = 200000;
         int trie[][] = new int[N][256];
         int nodes = 0;
         int fail[] = new int[N];
-        int word[] = new int[N];
+        int end_word[] = new int[N];
+
+        //almacena los indices en los que aparece una cadena (inicio, fin) 
+        LinkedHashMap<String, ArrayList<pair<Integer, Integer>>> mp = new LinkedHashMap<>();
 
         void add(String s, int idx) {
             int node = 0;
@@ -18,7 +24,7 @@ static class Aho_Corasick {
                 }
                 node = trie[node][ch];
             }
-            word[node] = idx;
+            end_word[node] = idx;
         }
 
         void build() {
@@ -55,9 +61,15 @@ static class Aho_Corasick {
                 node = trie[node][ch];
                 int tmp_node = node;
                 while (tmp_node > 0) {
-                    if (word[tmp_node] > 0) {
+                    if (end_word[tmp_node] > 0) {
                         ans++;
-                        // sa.println(p.get(word[tmp_node]));
+                        //String que aparece en text
+                        String s = p.get(end_word[tmp_node] - 1);
+                        //(inicio, fin)
+                        int start = i - s.length() + 1;
+                        int end = i;
+                        mp.get(s).add(new pair<>(start, end));
+                        // sa.print(p.get(word[tmp_node]-1)+"\n");
                     }
                     tmp_node = fail[tmp_node];
                 }
