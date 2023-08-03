@@ -2,103 +2,55 @@
 
 
 
-static int N = 1000 * 1000;
-    static int nxt[][] = new int[N][26];
-    static boolean end[] = new boolean[N];
-    static int cnt[] = new int[N];
-    static int nodes = 1;
 
-    // agregar = 1
-    // eliminar = -1
-    static void add_remove(String s, int op) {
-        int cur = 0;
-        for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            int v = c - 'a';
-            if (nxt[cur][v] == 0) {
-                nxt[cur][v] = nodes;
-                nodes++;
-            }
-            cur = nxt[cur][v];
-            cnt[cur] += op;
+static class Node {
+        int cont;
+        Node child[];
+
+        public Node() {
+            this.cont = 0;
+            child = new Node[26];
         }
-        if (op == 1)
-            end[cur] = true;
-        else
-            end[cur] = false;
     }
 
-    static boolean find(String s) {
-        int cur = 0;
-        for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            int v = c - 'a';
-            if (nxt[cur][v] == 0) {
-                return false;
-            }
-            cur = nxt[cur][v];
-            if (cnt[cur] == 0)
-                return false;
+    static class Trie {
+        Node root;
+
+        Trie() {
+            root = new Node();
         }
-        if (end[cur])
-            return true;
-        else
-            return false;
-    }
 
-    // cantidad de palabras agregadas que inician con s
-    static int count(String s) {
-        int cur = 0;
-        for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            int v = c - 'a';
-            if (nxt[cur][v] == 0) {
-                return 0;
+        void insert(String s) {
+            Node curr = root;
+            for (int i = 0; i < s.length(); ++i) {
+                char c = s.charAt(i);
+                if (curr.child[c - 'a'] == null) {
+                    curr.child[c - 'a'] = new Node();
+                }
+                curr.child[c - 'a'].cont++;
+                curr = curr.child[c - 'a'];
             }
-            cur = nxt[cur][v];
         }
-        return cnt[cur];
-    }
 
-    static void solve() throws IOException {
 
-        int q = en.nextInt();
-        while (q-- > 0) {
-            String w = en.next();
-            String s = en.next();
-            if (w.equals("add")) {
-                add_remove(s, 1);
-            } else if (w.equals("remove")) {
-                add_remove(s, -1);
-            } else if (w.equals("query")) {
-                sa.println(find(s) ? "YES" : "NO");
+        /* 
+        
+            if (x.first == 0 && x.second == 0 || len < s.length()) {
+                sa.write("NO ESTÁ\n");
             } else {
-                sa.println(count(s));
+                sa.write("SI ESTÁ\n");
             }
+
+         */
+        pair<Integer, Integer> query(String s) {
+            Node curr = root;
+            for (int i = 0; i < s.length(); ++i) {
+                char c = s.charAt(i);
+                if (curr.child[c - 'a'] == null) {
+                    return new pair<Integer, Integer>(i, curr.cont);
+                }
+                curr = curr.child[c - 'a'];
+            }
+            return new pair<Integer, Integer>(s.length(), curr.cont);
         }
-
-        /*
-         * input
-         * 
-         * 11
-         * add toy
-         * add tea
-         * add ted
-         * add a
-         * add ten
-         * add in
-         * add inner
-         * c t
-         * c te
-         * c in
-         * c taxi
-         */
-
-        /*
-         * output
-         * 4
-         * 3
-         * 2
-         * 0
-         */
     }
