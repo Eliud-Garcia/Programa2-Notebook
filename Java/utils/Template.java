@@ -4,11 +4,12 @@ import java.io.*;
 
 public class Template {
 
+    
     static FastReader en = new FastReader();
-    static PrintWriter sa = new PrintWriter(System.out);
+    static BufferedWriter sa = new BufferedWriter(new OutputStreamWriter(System.out));
+
 
     static void solve() throws IOException {
-
         
 
     }
@@ -19,35 +20,30 @@ public class Template {
         while (t-- > 0) {
             solve();
         }
+        en.br.close();
         sa.close();
     }
 
+    /*
+     * number of digits = log10(x) + 1
+     * number of bits = log2(x) + 1
+     * number of times that we have to divide x by k = logk(x)
+     */
 
-    static long gcd(long a, long b) {
+    // ==== log(x) / log(base);
+
+
+    static int gcd(int a, int b) {
         return b == 0 ? (a < 0 ? -a : a) : gcd(b, a % b);
     }
 
-    static long lcm(long a, long b) {
-        long lcm = (a / gcd(a, b)) * b;
+    static int lcm(int a, int b) {
+        int lcm = (a / gcd(a, b)) * b;
         return lcm > 0 ? lcm : -lcm;
     }
 
-    static double log(int x) {
-        /*
-         * number of digits = log10(x) + 1
-         * number of bits = log2(x) + 1
-         * number of times that we have to divide x by k = logk(x)
-         */
-        // ==== log(x) / log(base);
-        return Math.log(x) / Math.log(10);
-    }
 
-    static void sort(int[] x) {
-        shuffle(x);
-        Arrays.sort(x);
-    }
-
-    static void shuffle(int[] a) {
+    static void sort(int[] a) {
         Random get = new Random();
         for (int i = 0; i < a.length; i++) {
             int r = get.nextInt(a.length);
@@ -55,30 +51,7 @@ public class Template {
             a[i] = a[r];
             a[r] = temp;
         }
-    }
-
-    static int lower_bound(List<Long> a, long x) {
-        int l = -1, r = a.size();
-        while (l + 1 < r) {
-            int m = (l + r) >>> 1;
-            if (a.get(m) >= x)
-                r = m;
-            else
-                l = m;
-        }
-        return r;
-    }
-
-    static int upper_bound(List<Long> a, long x) {
-        int l = -1, r = a.size();
-        while (l + 1 < r) {
-            int m = (l + r) >>> 1;
-            if (a.get(m) <= x)
-                l = m;
-            else
-                r = m;
-        }
-        return l + 1;
+        Arrays.sort(a);
     }
 
     static class FastReader {
