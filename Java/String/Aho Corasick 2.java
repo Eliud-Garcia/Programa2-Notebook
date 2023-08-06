@@ -1,4 +1,4 @@
- // Aho_corasick fast
+ // Aho_corasick implementacion corta
 
     //para poder imprimir las palabras
     //que van apareciendo -> crear ArrayList<String> p;
