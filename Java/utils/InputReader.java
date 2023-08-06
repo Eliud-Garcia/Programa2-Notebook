@@ -3,7 +3,7 @@ Mas rapido que el BufferedReader
 
 
 
-   en = new InputReader("input.txt");
+    en = new InputReader("input.txt");
     sa = new BufferedWriter(new FileWriter("output.txt"));
 
     static class InputReader {
