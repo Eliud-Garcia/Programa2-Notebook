@@ -4,12 +4,13 @@ import java.io.*;
 
 public class Template {
 
-    
     static FastReader en = new FastReader();
     static BufferedWriter sa = new BufferedWriter(new OutputStreamWriter(System.out));
 
-
     static void solve() throws IOException {
+        //en = new FastReader("input.txt");
+        //sa = new BufferedWriter(new BufferedWriter(new FileWriter("output.txt")));
+
         
 
     }
@@ -23,7 +24,6 @@ public class Template {
         en.br.close();
         sa.close();
     }
-
     /*
      * number of digits = log10(x) + 1
      * number of bits = log2(x) + 1
@@ -31,7 +31,6 @@ public class Template {
      */
 
     // ==== log(x) / log(base);
-
 
     static int gcd(int a, int b) {
         return b == 0 ? (a < 0 ? -a : a) : gcd(b, a % b);
@@ -41,7 +40,6 @@ public class Template {
         int lcm = (a / gcd(a, b)) * b;
         return lcm > 0 ? lcm : -lcm;
     }
-
 
     static void sort(int[] a) {
         Random get = new Random();
@@ -58,16 +56,14 @@ public class Template {
         BufferedReader br;
         StringTokenizer st;
 
-        /*
-         * FILE I/O
-         * BufferedReader br = new BufferedReader(new FileReader("input.txt"));
-         * PrintWriter pw = new PrintWriter(new BufferedWriter(new
-         * FileWriter("output.txt")));
-         * en.br = br;
-         */
-
+        // Entrada standar
         public FastReader() {
             br = new BufferedReader(new InputStreamReader(System.in));
+        }
+
+        // Entrada por archivo
+        public FastReader(String file) throws IOException {
+            this.br = new BufferedReader(new FileReader(file));
         }
 
         String next() {
