@@ -1,15 +1,25 @@
  
 Mas rapido que el BufferedReader 
 
+ en = new InputReader("input.txt");
+        sa = new BufferedWriter(new FileWriter("output.txt"));
+
 
 static class InputReader {
+
         private InputStream stream;
         private byte[] buf = new byte[1024];
         private int curChar;
         private int numChars;
 
+        //para entrada standar
         public InputReader() {
             this.stream = System.in;
+        }
+
+        //para archivo de entrada
+        public InputReader(String file) throws IOException {
+            this.stream = new FileInputStream(file);
         }
 
         int read() {
