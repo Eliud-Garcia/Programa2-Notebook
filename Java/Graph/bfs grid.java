@@ -1,24 +1,15 @@
 
-import java.io.*;
-import java.util.*;
 
 public class BFS_matriz {
 
-    static FastWriter sa = new FastWriter();
-    static InputReader en = new InputReader();
+    
+
 
     /*
      *    https://cses.fi/problemset/task/1193/
      *    un mapa en forma de matriz, llegar desde A hasta B
      */
-    static class pair<T> {
-        T first;
-        T second;
-        public pair(T f, T s) {
-            first = f;
-            second = s;
-        }
-    }
+
 
     static final int MAX_N = 1001;
     static boolean vis[][] = new boolean[MAX_N][MAX_N];
@@ -103,6 +94,7 @@ public class BFS_matriz {
                 }
             }
         }
+
         if(bfs(x, y)){
             sa.println("YES\n"+path.size());
             StringBuilder ans = new StringBuilder();
@@ -112,14 +104,13 @@ public class BFS_matriz {
         
     }
 
-    public static void main(String[] args) throws IOException {
-        long t;
-        t = 1;
-        while (t-- > 0) {
-            solve();
+     static class pair<T> {
+        T first;
+        T second;
+        public pair(T f, T s) {
+            first = f;
+            second = s;
         }
-        sa.close();
-
     }
 
     
