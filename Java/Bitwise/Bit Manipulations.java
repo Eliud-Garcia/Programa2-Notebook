@@ -1,33 +1,12 @@
+Operaciones a nivel de bits.
 
-
-
-
-    // Sets the i'th bit to 1
-    public static int setBit(int set, int i) {
-        return set | (1 << i);
-    }
-
-    // Checks if the i'th is set
-    public static boolean isSet(int set, int i) {
-        return (set & (1 << i)) != 0;
-    }
-
-    // Sets the i'th bit to zero
-    public static int clearBit(int set, int i) {
-        return set & ~(1 << i);
-    }
-
-    // Toggles the i'th bit from 0 -> 1 or 1 -> 0
-    public static int toggleBit(int set, int i) {
-        return set ^ (1 << i);
-    }
-
-    // Returns a number with the first n bits set to 1
-    public static int setAll(int n) {
-        return (1 << n) - 1;
-    }
-
-    // Verifies if a number n is a power of two
-    public static boolean isPowerOfTwo(int n) {
-        return n > 0 && (n & (n - 1)) == 0;
-    }
+n & 1		-> Verifica si n es impar o no
+n & (1<<k)	-> Verifica si el k-esimo bit esta encendido o no
+n | (1<<k)	-> Enciende el k-esimo bit
+n & ~(1<<k)	-> Apaga el k-esimo bit
+n ^ (1<<k)	-> Invierte el k-esimo bit
+~n		-> Invierte todos los bits
+n & -n		-> Devuelve el bit encendido mas a la derecha
+~n & (n+1)	-> Devuelve el bit apagado mas a la derecha
+n | (n+1)	-> Enciende el bit apagado mas a la derecha
+n & (n-1)	-> Apaga el bit encendido mas a la derecha
