@@ -1,24 +1,20 @@
-
-
-//se puede usar en cualquier estructura
-
-static class pair<F extends Comparable<F>, S extends Comparable<S>> implements Comparable<pair<F, S>> {
+    
+    
+    
+    
+    
+    
+    static class pair<F extends Comparable<F>, S extends Comparable<S>> implements Comparable<pair<F, S>> {
         F first;
         S second;
-
-        public pair(F first, S second) {
-            this.first = first;
-            this.second = second;
+        
+        pair(F f, S s) {
+            first = f;
+            second = s;
         }
 
-        /*
-         * • If object x is less than object y, return a negative number
-         * • If object x is greater than object y, return a positive number
-         * • If object x is equal to object y, return 0
-         */
         @Override
         public int compareTo(pair<F, S> other) {
-            // decresing order = return -first.compareTo(other.first);
             if (first == other.first) {
                 return second.compareTo(other.second);
             } else {
@@ -27,20 +23,17 @@ static class pair<F extends Comparable<F>, S extends Comparable<S>> implements C
         }
 
         @Override
-        public boolean equals(Object obj) {
-            if (this == obj) {
-                return true;
-            }
-            if (obj == null || getClass() != obj.getClass()) {
-                return false;
-            }
-            pair<?, ?> other = (pair<?, ?>) obj;
-            return Objects.equals(first, other.first) && Objects.equals(second, other.second);
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            pair<?, ?> p = (pair<?, ?>) o;
+            return Objects.equals(first, p.first) && Objects.equals(second, p.second);
         }
 
         @Override
         public int hashCode() {
-            return 31 * first.hashCode() + second.hashCode();
+            int h;
+            return (first == null || second == null) ? 0 : (h = first.hashCode() + second.hashCode()) ^ (h >>> 16);
         }
 
         @Override
@@ -48,3 +41,14 @@ static class pair<F extends Comparable<F>, S extends Comparable<S>> implements C
             return "(" + first + ", " + second + ")";
         }
     }
+
+
+
+
+
+
+
+
+
+
+    
