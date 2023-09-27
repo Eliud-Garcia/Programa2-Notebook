@@ -1,6 +1,11 @@
     
 
-
+    
+        /*
+         * • If object a < b, return a negative number
+         * • If object a > b, return a positive number
+         * • If object a == b, return 0
+         */
 
 
     Comparator<int[]> byDistance = new Comparator<int[]>() {
