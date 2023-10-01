@@ -1,6 +1,6 @@
 
-   
 
+    //indexado desde 0
     static class SegmentTree<T> {
         int n;
         ArrayList<T> st;
@@ -53,6 +53,7 @@
             upd(1, 0, n - 1, pos, val);
         }
         // l inclusive  r exclusive
+        // indexado desde cero
         T query(int l, int r) {
             return query(1, 0, n - 1, l, r);
         }
@@ -63,10 +64,22 @@
      
      /* 
      ArrayList<Long> arr = new ArrayList<>();
-     BinaryOperator<Long> oper = (a, b) -> Math.min(a, b);
-     Long neutro = Long.valueOf(1000000007);
-     SegmentTree<Long> st = new SegmentTree<Long>(arr, oper, neutro);
+     BinaryOperator<Long> oper = (a, b) -> min(a, b);
+     SegmentTree<Long> st = new SegmentTree<Long>(arr, oper, 0L);
      Long QUERY = st.query(l, r);
-     System.out.println(QUERY == null ? 0 : QUERY); -> validar query que no sea null
-     */
+     println(QUERY == null ? 0 : QUERY); -> validar query que no sea null
 
+
+     int l, r;
+     if( 1 <= query <= n){
+        l--;
+        r--;
+        st.query(l ,r);
+    }
+    
+    if( 0 <= query <= n){
+        r--;
+        st.query(l ,r);
+     }
+
+     */
