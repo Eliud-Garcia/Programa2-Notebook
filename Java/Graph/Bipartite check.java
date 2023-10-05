@@ -24,6 +24,7 @@
             }
             if (color[next] == color[node]) {
                 bipartite = false;
+                return;
             }
 
         }
@@ -51,7 +52,7 @@
             graph[a].add(b);
             graph[b].add(a);
         }
-        for (int i = 1; i < n + 1; i++) {
+        for (int i = 1; i < n + 1 && bipartite; i++) {
             if (!vis[i]) {
                 dfs(i, 1);
             }
