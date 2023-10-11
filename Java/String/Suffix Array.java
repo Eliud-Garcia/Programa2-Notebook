@@ -2,10 +2,10 @@
 
 //primero llamar a init(texto largo)
 //luego match(texto corto)
- 
+
     static class suffixArray {
 
-        int K = 26; //alphabet size
+        int K = 26; // alphabet size
         int sa[];
         int occ[][];
         int count[];
@@ -51,7 +51,7 @@
             }
 
             int t[] = new int[end - begin + 1];
-            //indices in which w appears in s
+            // indices in which w appears in s
             for (int j = begin; j <= end; j++) {
                 // int start = SA[j];
                 // int end = SA[j] + w.length() - 1;
@@ -108,23 +108,36 @@
         void kasai(String s) {
             s += "$";
             int n = s.length();
-            lcp = new int[n - 1];
+            lcp = new int[n];
             int[] inv = new int[n];
             for (int i = 0; i < n; i++)
                 inv[sa[i]] = i;
             for (int i = 0, k = 0; i < n; i++) {
-                if (inv[i] > 0) {
-                    int j = sa[inv[i] - 1];
-                    while ((i + k < n) && (j + k < n) && s.charAt(i + k) == s.charAt(j + k))
-                        k++;
-                    lcp[inv[i] - 1] = k;
-                    if (k > 0)
-                        k--;
+                if (inv[i] == n - 1) {
+                    k = 0;
+                    continue;
                 }
+                int j = sa[inv[i] + 1];
+                while ((i + k < n) && (j + k < n) && s.charAt(i + k) == s.charAt(j + k))
+                    k++;
+                lcp[inv[i]] = k;
+                if (k > 0)
+                    k--;
             }
         }
+
+        /*
+         * n = s.length();
+         * unique subStrings of s = (n*(n + 1)/2) - (Σ lcp[i]);
+         */
+        long uniqueSubStrings(String s) {
+            init(s);
+            kasai(s);
+            int n = s.length();
+            long ans = n - sa[0];
+            for (int i = 1; i < lcp.length; i++) {
+                ans += (n - sa[i]) - lcp[i - 1];
+            }
+            return ans;
+        }
     }
-    // int matches[]  = suffix.match(w, k);
-    // if (matches.length==1 && matches[0] == -1) {
-    //    sa.println(-1);
-    //  }
