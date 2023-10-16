@@ -1,118 +1,116 @@
 
 
-public class BFS_matriz {
 
-    
-
-
-    /*
+	/*
      *    https://cses.fi/problemset/task/1193/
      *    un mapa en forma de matriz, llegar desde A hasta B
      */
 
-
-    static final int MAX_N = 1001;
-    static boolean vis[][] = new boolean[MAX_N][MAX_N];
-    static char ar[][] = new char[MAX_N][MAX_N];
-    static char br[][] = new char[MAX_N][MAX_N];
-    static LinkedList<Character> path = new LinkedList<>();
+    static boolean vis[][];
+    static char grid[][];
+    static char br[][];
+    static Deque<Character> path = new LinkedList<>();
     static int n, m;
-    
-    static boolean isValid(int x, int y) {
-        if (x < 1 || x > n || y < 1 || y > m) return false;
-        if (ar[x][y] == '#' || vis[x][y]==true) return false;
+
+    static boolean isValid(int r, int c) {
+        if (r < 0 || r >= n || c < 0 || c >= m){
+            return false;
+        }
+        if (grid[r][c] == '#' || vis[r][c]){
+            return false;
+        }
         return true;
     }
-    
+
     static boolean bfs(int x, int y) {
-        LinkedList<pair<Integer>> q = new LinkedList<>();
-        q.add(new pair<Integer>(x, y));
+        Deque<int[]> q = new LinkedList<>();
+        q.add(new int[] { x, y });
         vis[x][y] = true;
 
         while (!q.isEmpty()) {
-            int a = q.getFirst().first;
-            int b = q.getFirst().second;
+            int i = q.peek()[0];
+            int j = q.peek()[1];
             q.removeFirst();
-            if(ar[a][b] == 'B'){
-                while(true){
-                    path.add(br[a][b]);
-                    if(path.getLast() == 'L') b++;
-                    if(path.getLast() == 'R') b--;
-                    if(path.getLast() == 'U') a++;
-                    if(path.getLast() == 'D') a--;
+            if (grid[i][j] == 'B') {
+                while (true) {
+                    path.add(br[i][j]);
+                    if (path.getLast() == 'L')
+                        j++;
+                    if (path.getLast() == 'R')
+                        j--;
+                    if (path.getLast() == 'U')
+                        i++;
+                    if (path.getLast() == 'D')
+                        i--;
+                    if (i == x && j == y)
+                        break;
 
-                    if(a==x && b==y) break;
+                    if (i < 0 || i >= n || j < 0 || j >= m)
+                        break;
                 }
                 return true;
             }
-            //left
-		    if(isValid(a , b - 1)){
-                br[a][b-1] = 'L';
-                q.add(new pair<Integer>(a, b-1));
-                vis[a][b-1] = true;
-            } 
-		
-		    //right
-		    if(isValid(a , b + 1)){
-                br[a][b+1] = 'R';
-                q.add(new pair<Integer>(a, b+1));
-                vis[a][b+1] = true;
-            } 
-		
-		    //up
-		    if(isValid(a - 1, b)) {
-                br[a - 1][b] = 'U';
-                q.add(new pair<Integer>(a-1, b));
-                vis[a-1][b] = true;
+            // left
+            if (isValid(i, j - 1)) {
+                br[i][j - 1] = 'L';
+                q.add(new int[] { i, j - 1 });
+                vis[i][j - 1] = true;
             }
-            
-		
-		    //down
-		    if(isValid(a + 1, b)){
-                br[a + 1][b] = 'D';
-                q.add(new pair<Integer>(a+1, b));
-                vis[a+1][b] = true;
-            } 
+
+            // right
+            if (isValid(i, j + 1)) {
+                br[i][j + 1] = 'R';
+                q.add(new int[] { i, j + 1 });
+                vis[i][j + 1] = true;
+            }
+
+            // up
+            if (isValid(i - 1, j)) {
+                br[i - 1][j] = 'U';
+                q.add(new int[] { i - 1, j });
+                vis[i - 1][j] = true;
+            }
+
+            // down
+            if (isValid(i + 1, j)) {
+                br[i + 1][j] = 'D';
+                q.add(new int[] { i + 1, j });
+                vis[i + 1][j] = true;
+            }
 
         }
         return false;
 
     }
 
-    static void solve() throws IOException {
-        n = en.nextInt();
-        m = en.nextInt();
-
-        int x= 0, y= 0;
-        for (int i = 1; i <= n; i++) {
-            String line = en.next();
-            for (int j = 1; j <= m; j++) {
-                ar[i][j] =line.charAt(j-1);
-                if(ar[i][j]=='A') {
-                    x=i;
-                    y=j;
+    public static void main(String[] args) throws IOException {
+        n = nextInt();
+        m = nextInt();
+        grid = new char[n][m];
+        vis = new boolean[n][m];
+        br = new char[n][m];
+        int x= -1, y = -1;
+        for (int i = 0; i < n; i++) {
+            String line = next();
+            for (int j = 0; j < line.length(); j++) {
+                grid[i][j] = line.charAt(j);
+                if(grid[i][j]=='A'){
+                    x = i;
+                    y = j;
                 }
             }
         }
-
         if(bfs(x, y)){
-            sa.println("YES\n"+path.size());
-            StringBuilder ans = new StringBuilder();
-            while(!path.isEmpty()) ans.append(path.removeLast());
-            sa.println(ans);
-        }else sa.println("NO");
-        
-    }
-
-     static class pair<T> {
-        T first;
-        T second;
-        public pair(T f, T s) {
-            first = f;
-            second = s;
+            sa.println("YES");
+            sa.println(path.size());
+            while(!path.isEmpty()){
+                sa.print(path.removeLast());
+            }
+            sa.println();
+            
+        }else{
+            sa.println("NO");
         }
+
+        sa.close();
     }
-
-    
-
-}
