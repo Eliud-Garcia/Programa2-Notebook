@@ -1,46 +1,55 @@
 
+    static final long INF = Long.MAX_VALUE;
+    static List<edge> g[];
+    static long dis[];
+    static int par[];
+    static boolean vis[];
 
-    static final int INF = Integer.MAX_VALUE;
-    static List<int[]> adj[];
-    static int[] dist;
-    static int[] par;
-    static BitSet isDone;
+    static class edge {
+        int v;
+        long w;
+
+        edge(int node, long weight) {
+            v = node;
+            w = weight;
+        }
+    }
 
     // dijkstra(int source, int des)
     static boolean dijkstra(int s, int t) {
 
-        // new int[] {destino, peso};
-    
-        Comparator<int[]> cmp = new Comparator<int[]>() {
+        Comparator<edge> cmp = new Comparator<edge>() {
             @Override
-            public int compare(int a[], int b[]) {
-                return Integer.compare(a[0], b[0]);
+            public int compare(edge a, edge b) {
+                return Long.compare(a.w, b.w);
             }
         };
 
-        PriorityQueue<int[]> pq = new PriorityQueue<>(cmp);
+        PriorityQueue<edge> pq = new PriorityQueue<>(cmp);
 
-        Arrays.fill(dist, INF);
+        // new edge(node, weight);
+        pq.add(new edge(s, 0));
 
-        pq.add(new int[] { 0, s });
-
-        dist[s] = 0;
+        dis[s] = 0;
         par[s] = -1;
 
         while (!pq.isEmpty()) {
-            int u = pq.poll()[1];
+            edge x = pq.poll();
+            int u = x.v;
 
-            if (u == t) return true;
+            if (u == t) {
+                return true;
+            }
 
-            isDone.set(u, true);
+            vis[u] = true;
 
-            for (int[] next : adj[u]) {
-                int v = next[0];
-                int w = next[1];
+            for (edge next : g[u]) {
+                int v = next.v;
+                long w = next.w;
 
-                if (!isDone.get(v) && dist[u] + w < dist[v]) {
-                    dist[v] = dist[u] + w;
-                    pq.add(new int[] { dist[v], v });
+                if (!vis[v] && dis[u] + w < dis[v]) {
+                    dis[v] = dis[u] + w;
+                    pq.add(new edge(v, dis[v]));
                     par[v] = u;
                 }
             }
@@ -52,25 +61,26 @@
         int n = nextInt();
         int m = nextInt();
 
-        adj = new ArrayList[n + 3];
-        dist = new int[n + 3];
+        g = new ArrayList[n + 3];
+        dis = new long[n + 3];
         par = new int[n + 3];
-        isDone = new BitSet(n + 3);
+        vis = new boolean[n + 3];
 
-
-        for (int i = 0; i < n + 3; i++){
-            adj[i] = new ArrayList<>();
+        for (int i = 0; i < n + 3; i++) {
+            g[i] = new ArrayList<>();
+            dis[i] = INF;
         }
 
-        int a, b, w;
+        int a, b;
+        long w;
         for (int i = 0; i < m; i++) {
             a = nextInt();
             b = nextInt();
-            w = nextInt();
+            w = nextLong();
 
-            //adj[source].add(new int[] {dest, weight});
-            adj[a].add(new int[] { b, w });
-            adj[b].add(new int[] { a, w });
+            // adj[source].add({dest, weight});
+            g[a].add(new edge(b, w));
+            g[b].add(new edge(a, w));
         }
 
         // path is found
@@ -78,7 +88,8 @@
             StringBuilder ans = new StringBuilder();
             List<Integer> path = new ArrayList<>();
 
-            for (b = n; b != -1; b = par[b]) path.add(b);
+            for (b = n; b != -1; b = par[b])
+                path.add(b);
 
             // reversing path
             for (int i = path.size() - 1; i >= 0; i--) {
@@ -88,6 +99,6 @@
         } else {
             sa.println("-1");
         }
+
         sa.close();
     }
-
