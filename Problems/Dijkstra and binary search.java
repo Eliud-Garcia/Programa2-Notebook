@@ -1,4 +1,10 @@
 
+
+    //buscando llegar a tiempo k 
+    //tratando de exceder lo minimo posible
+    //los limites de velocidad
+
+
     static final long INF = Long.MAX_VALUE;
     static List<edge> g[];
     static double dis[];
@@ -92,9 +98,6 @@
             sa.println(0);
         } else {
 
-            //buscando llegar a tiempo k 
-            //tratando de exceder lo minimo posible
-            //los limites de velocidad
             double l = 0, r = 1e9, mid = -1;
             int it = 50;
             while (it-- > 0) {
