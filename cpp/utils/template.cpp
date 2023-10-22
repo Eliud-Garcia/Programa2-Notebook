@@ -1,8 +1,8 @@
 #include <bits/stdc++.h>
-#include <iostream>
+
 using namespace std;
 
-#define endl '\n'
+#define ln '\n'
 #define all(x) x.begin(), x.end()
 #define ll long long
 #define forn(i, n) for (int i = 0; i < n; i++)
