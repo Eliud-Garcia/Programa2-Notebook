@@ -42,3 +42,19 @@
         }
         return res;
     }
+	
+	
+	//busqueda binaria sobre la respuesta 
+	//usando valores double
+	double l = 0, r = 1e9, mid;
+    int it = 100;
+    while (it-- > 0) {
+        mid = l + (r - l) / 2;
+		//cambiar check por lo necesitado
+        if (check(a, k, mid)) {
+            l = mid;
+        } else {
+            r = mid;
+        }
+    }
+    sa.printf("%.7f\n", l);
