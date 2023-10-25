@@ -1,7 +1,6 @@
- 
 
-//primero llamar a init(texto largo)
-//luego match(texto corto)
+    // primero llamar a init(texto largo)
+    // luego match(texto corto)
 
     static class suffixArray {
 
@@ -12,6 +11,8 @@
         int lcp[];
         int n;
 
+
+        // build suffix array
         void init(String s) {
             s += "$";
             n = s.length();
@@ -100,6 +101,7 @@
         }
 
         /*
+         * Longest Common Preffix
          * Use Kasai algorithm to build LCP array
          * LCP is an array in which every index
          * tracks how many characters two sorted
@@ -139,5 +141,58 @@
                 ans += (n - sa[i]) - lcp[i - 1];
             }
             return ans;
+        }
+
+        /*
+         * To find the LCS of two Strings
+         * Let's combine two strings into one through the symbol “sharp” s1#s2
+         * identify the suffixes which start in positions wich are inside the s1
+         * identify the suffixes which start in positions wich are inside the s2
+         * then let's build SA and LCP of combined string
+         * 
+         * then we need to find two suffixes,
+         * one should be inside s1 and other should be inside s2
+         * 
+         * such that the length of their common prefix is a big as possible
+         * 
+         */
+        String longestCommonSubString(String s1, String s2) {
+            StringBuilder combined = new StringBuilder();
+
+            int leftS1 = 0;
+            combined.append(s1).append("#");
+            int rightS1 = combined.length() - 1;
+
+            int leftS2 = combined.length();
+            combined.append(s2);
+            int rightS2 = combined.length();
+
+            init(combined + "");
+            kasai(combined + "");
+            int MAX = 0;
+            int start = -1;
+
+            for (int i = 0; i < sa.length - 1; i++) {
+                // if sa[i] inside s1 && sa[i + 1] inside s2
+                if (sa[i] >= leftS1 && sa[i] < rightS1 && sa[i + 1] >= leftS2 && sa[i + 1] < rightS2) {
+                    if (lcp[i] > MAX) {
+                        MAX = lcp[i];
+                        start = i;
+                    }
+                    // else sa[i] inside s2 && sa[i + 1] inside s1
+                } else if (sa[i + 1] >= leftS1 && sa[i + 1] < rightS1 && sa[i] >= leftS2 && sa[i] < rightS2) {
+                    if (lcp[i] > MAX) {
+                        MAX = lcp[i];
+                        start = i;
+                    }
+                }
+            }
+            if (start == -1) {
+                return "";
+            } else {
+                String lcs = combined.substring(sa[start], sa[start] + MAX);
+                return lcs;
+            }
+
         }
     }
