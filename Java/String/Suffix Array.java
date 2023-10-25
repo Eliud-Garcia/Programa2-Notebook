@@ -145,7 +145,7 @@
 
         /*
          * To find the LCS of two Strings
-         * Let's combine two strings into one through the symbol “sharp” s1#s2
+         * Let's combine two strings into one through the symbol "sharp" s1#s2
          * identify the suffixes which start in positions wich are inside the s1
          * identify the suffixes which start in positions wich are inside the s2
          * then let's build SA and LCP of combined string
