@@ -4,43 +4,41 @@ import static java.lang.Math.*;
 
 public class Template {
 
-    static PrintWriter sa = new PrintWriter(new OutputStreamWriter(System.out));
-    static BufferedReader en = new BufferedReader(new InputStreamReader(System.in));
-    static StringTokenizer st;
-    
-    
-    
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args)  {
         //code here
+        sa.close();
     }
-    
-   
-    
-    
 
-    static String next() throws IOException {
+
+    static String next()  {
         while (st == null || !st.hasMoreElements()) {
-            st = new StringTokenizer(en.readLine());
+            try{ st = new StringTokenizer(en.readLine());}
+            catch(Exception e){e.printStackTrace();}
         }
         return st.nextToken();
     }
-    
-    static int nextInt() throws IOException {
+
+    static String nextLine(){
+        String str = "";
+        try{str = en.readLine();}
+        catch(Exception e){e.printStackTrace();}
+        return str;
+    }
+
+    static int nextInt(){
         return Integer.parseInt(next());
     }
 
-    static long nextLong() throws IOException {
+    static long nextLong() {
         return Long.parseLong(next());
     }
 
-    static double nextDouble() throws IOException {
+    static double nextDouble(){
         return Double.parseDouble(next());
     }
 
-    static String nextLine() throws IOException {
-        String str = "";
-        str = en.readLine();
-        return str;
-    }
+    static PrintWriter sa = new PrintWriter(new OutputStreamWriter(System.out));
+    static BufferedReader en = new BufferedReader(new InputStreamReader(System.in));
+    static StringTokenizer st;
 
 }
