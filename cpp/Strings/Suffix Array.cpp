@@ -1,126 +1,83 @@
+
 #include <bits/stdc++.h>
 using namespace std;
 
 #define ln '\n'
 #define all(x) x.begin(), x.end()
 #define ll long long
-#define forn(i, n) for (int i = 0; i < n; i++)
 #define vi vector<int>
+#define forn(i, a, b) for (int i = a; i < b; i++)
+#define sz(x) ((int) x.size())
 
-// primero llamar a init(texto largo)
-// luego match(texto corto)
-
-struct suffixArray {
-    int K = 26; // alphabet size
-    vector<vi> occ;
-    vi sa;
-    vi count;
-    vi lcp;
+struct SuffixArray {
+    int K = 256; // alphabet size
     int n;
+    vi sa, lcp, c, cnt;
 
-    // Build suffix array
-    void init(string& s)
+    vi make_suffix_array(string& str)
     {
+        string s = str;
         s += "$";
         n = s.length();
-        sa = computeSuffixArray(s);
-        occ = vector<vi>(n + 1, vi(K, 0));
-        count = vi(K + 1, 0);
+        sa = vi(n);
+        c = vi(2 * n);
+        cnt = vi((max(n, K)));
 
-        forn(i, n)
-        {
-            int t = s[sa[i] == 0 ? n - 1 : sa[i] - 1] - 'a';
-            if (t >= 0) {
-                occ[i][t]++;
-                count[t + 1]++;
+        forn (k, 0, n) {
+            cnt[(int)(s[k])]++;
+        }
+        forn (k, 1, K) {
+            cnt[k] += cnt[k - 1];
+        }
+        forn (k, 0, n) {
+            sa[--cnt[(int)(s[k])]] = k;
+        }
+        c[sa[0]] = 0;
+        int classes = 1;
+        forn (k, 1, n) {
+            if (s[sa[k]] != s[sa[k - 1]]) {
+                classes++;
             }
-            copy(occ[i].begin(), occ[i].end(), occ[i + 1].begin());
+            c[sa[k]] = classes - 1;
         }
+        vi pn(n);
+        vi cn(2 * n);
 
-        for (int i = 1; i < count.size(); i++) {
-            count[i] += count[i - 1];
-        }
-    }
-
-    // Returns indices (start, end) of each occurrence of w in s
-    // If a minimum number of occurrences is not needed, set minOcc = 0
-    vi match(const string& w, int minOcc)
-    {
-        int begin = 0, end = n - 1;
-
-        for (int j = w.length() - 1; end - begin + 1 >= minOcc && j >= 0; j--) {
-            char c = w[j];
-            int let = c - 'a';
-            int nbegin = count[let] + (begin == 0 ? 0 : occ[begin - 1][let]) + 1;
-            int nend = count[let] + occ[end][let];
-            begin = nbegin;
-            end = nend;
-        }
-
-        if (end - begin + 1 < minOcc) {
-            // cout << "No" << ln;
-            return { -1 };
-        }
-
-        vi matches(end - begin + 1);
-
-        for (int j = begin; j <= end; j++) {
-            // int start = SA[j];
-            // int end = SA[j] + w.length() - 1;
-            matches[j - begin] = sa[j];
-        }
-        sort(all(matches));
-        // cout << "Yes" << ln;
-        return matches;
-    }
-
-    vi computeSuffixArray(const string& str)
-    {
-        int n = str.length();
-        vi sa(n);
-
-        forn(i, n)
-        {
-            sa[i] = n - 1 - i;
-        }
-
-        sort(all(sa), [&str](int a, int b) {
-            return str[a] < str[b];
-        });
-
-        vi classes(n);
-
-        forn(j, n)
-        {
-            classes[j] = str[j];
-        }
-
-        for (int len = 1; len < n; len *= 2) {
-            vi c(classes);
-
-            forn(i, n)
-            {
-                classes[sa[i]] = i > 0 && c[sa[i - 1]] == c[sa[i]] && sa[i - 1] + len < n
-                        && c[sa[i - 1] + len / 2] == c[sa[i] + len / 2]
-                    ? classes[sa[i - 1]]
-                    : i;
-            }
-
-            vi cnt(n);
-            forn(i, n)
-            {
-                cnt[i] = i;
-            }
-
-            vi s(sa);
-
-            forn(i, n)
-            {
-                int s1 = s[i] - len;
-                if (s1 >= 0) {
-                    sa[cnt[classes[s1]]++] = s1;
+        for (int h = 0; (1 << h) < n; h++) {
+            forn (k, 0, n) {
+                pn[k] = sa[k] - (1 << h);
+                if (pn[k] < 0) {
+                    pn[k] += n;
                 }
             }
+
+            fill(all(cnt), 0);
+
+            forn (k, 0, n) {
+                cnt[c[pn[k]]]++;
+            }
+            forn (k, 1, classes) {
+                cnt[k] += cnt[k - 1];
+            }
+            for (int k = n - 1; k >= 0; k--) {
+                sa[--cnt[c[pn[k]]]] = pn[k];
+            }
+            cn[sa[0]] = 0;
+            classes = 1;
+            forn (k, 1, n) {
+                int cur1 = c[sa[k]];
+                int cur2 = c[sa[k] + (1 << h)];
+                int prev1 = c[sa[k - 1]];
+                int prev2 = c[sa[k - 1] + (1 << h)];
+
+                if (cur1 != prev1 || cur2 != prev2) {
+                    classes++;
+                }
+                cn[sa[k]] = classes - 1;
+            }
+
+            // swap c and cn
+            swap(c, cn);
         }
 
         return sa;
@@ -133,15 +90,15 @@ struct suffixArray {
      * tracks how many characters two sorted
      * adjacent suffixes have in common.
      */
-    void kasai(string& s)
+    void kasai(string& str)
     {
+        string s = str;
         s += "$";
         int n = s.length();
-        lcp.resize(n);
+        lcp = vi(n);
         vi inv(n);
-        forn(i, n)
-            inv[sa[i]]
-            = i;
+        forn (i, 0, n)
+            inv[sa[i]] = i;
         for (int i = 0, k = 0; i < n; i++) {
             if (inv[i] == n - 1) {
                 k = 0;
@@ -160,51 +117,51 @@ struct suffixArray {
      * n = s.length();
      * unique subStrings of s = (n*(n + 1)/2) - (Σ lcp[i]);
      */
-    ll uniqueSubStrings(string& s)
+    ll uniqueSubStrings(string& str)
     {
-        init(s);
+        string s = str;
+        make_suffix_array(s);
         kasai(s);
         int n = s.length();
-        long ans = n - sa[0];
-        for (int i = 1; i < lcp.size(); i++) {
+        ll ans = n - sa[0];
+        forn (i, 1, lcp.size()) {
             ans += (n - sa[i]) - lcp[i - 1];
         }
         return ans;
     }
-
+    
     /*
      * To find the LCS of two Strings
      * Let's combine two strings into one through the symbol "sharp" s1#s2
      * identify the suffixes which start in positions wich are inside the s1
      * identify the suffixes which start in positions wich are inside the s2
      * then let's build SA and LCP of combined string
-     *
+     * 
      * then we need to find two suffixes,
      * one should be inside s1 and other should be inside s2
-     *
+     * 
      * such that the length of their common prefix is a big as possible
-     *
+     * 
      */
+
     string longestCommonSubString(string& s1, string& s2)
     {
-        string combined;
+        string combined = s1;
 
         int leftS1 = 0;
-        combined += s1;
-        combined += "#";
-        int rightS1 = combined.size() - 1;
+        combined += ("#");
+        int rightS1 = combined.length() - 1;
 
-        int leftS2 = combined.size();
-        combined += s2;
-        int rightS2 = combined.size();
+        int leftS2 = combined.length();
+        combined += (s2);
+        int rightS2 = combined.length();
 
-        init(combined);
+        make_suffix_array(combined);
         kasai(combined);
         int MAX = 0;
         int start = -1;
 
-        forn(i, sa.size() - 1)
-        {
+        forn (i, 0, sa.size() - 1) {
             // if sa[i] inside s1 && sa[i + 1] inside s2
             if (sa[i] >= leftS1 && sa[i] < rightS1 && sa[i + 1] >= leftS2 && sa[i + 1] < rightS2) {
                 if (lcp[i] > MAX) {
@@ -222,8 +179,84 @@ struct suffixArray {
         if (start == -1) {
             return "";
         } else {
-            string lcs = combined.substr(sa[start], sa[start] + MAX);
-            return lcs;
+            for (int i = sa[start]; i < sa[start] + MAX; i++) {
+                cout << combined[i];
+            }
+            cout << ln;
+            // string lcs = combined.substr(sa[start], sa[start] + MAX);
+            return "";
         }
     }
+
+    int match(string& s, string& w)
+    {
+        int n = s.length();
+        int l = 1;
+        int r = n;
+        int ansl = -1;
+
+        while (l <= r) {
+            int mid = l + (r - l) / 2;
+
+            if (compare(s, sa[mid], w) >= 0) {
+                ansl = mid;
+                r = mid - 1;
+            } else {
+                l = mid + 1;
+            }
+        }
+
+        l = 1;
+        r = n;
+        int ansr = -1;
+
+        while (l <= r) {
+            int mid = l + (r - l) / 2;
+
+            if (compare(s, sa[mid], w) <= 0) {
+                ansr = mid;
+                l = mid + 1;
+            } else {
+                r = mid - 1;
+            }
+        }
+
+        if (ansl == -1 || compare(s, sa[ansl], w) != 0) {
+            return -1;
+        } else {
+            return ansr - ansl + 1;
+        }
+    }
+
+    int compare(string& s, int x, string& qs)
+    {
+        int n = s.length();
+        int qn = qs.length();
+
+        int i = 0;
+        while (i + x < n && i < qn && s[i + x] == qs[i])
+            i++;
+
+        if (i >= qn) {
+            return 0;
+        } else if (i + x >= n) {
+            return -1;
+        }
+
+        return (int)s[i + x] - (int)qs[i];
+    }
 };
+
+int main()
+{
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
+    string s, t;
+    cin >> s >> t;
+    SuffixArray sf;
+    sf.longestCommonSubString(s, t);
+
+    return 0;
+}
