@@ -8,11 +8,10 @@ using namespace std;
 #define vi vector<int>
 #define vbool vector<bool>
 #define pb push_back
-
 vector<vi> g;
 vi color;
 vi ans;
-
+vbool vis;
 bool bipartite = 1;
 
 void dfs(int node, int c){
@@ -52,12 +51,14 @@ int main()
         }
     }
     if(bipartite){
+        
+        //imprimir el color que le toca a cada nodo
         for(int i = 1; i <n + 1; i++){
             cout << color[i] + 1 <<" ";
         }
         
     }else{
-        cout << "-1" << ln;
+        cout << "No bipartite" << ln;
     }
     
     return 0;
