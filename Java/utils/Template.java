@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.*;
 import static java.lang.Math.*;
 
-public class Template {
+public class Main {
 
     public static void main(String[] args)  {
         //code here

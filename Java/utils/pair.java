@@ -1,10 +1,6 @@
     
-    
-    
-    
-    
-    
-    static class pair<F extends Comparable<F>, S extends Comparable<S>> implements Comparable<pair<F, S>> {
+    static class pair<F extends Comparable<F>, S extends Comparable<S>> 
+    implements Comparable<pair<F, S>> {
         F first;
         S second;
         
@@ -13,13 +9,14 @@
             second = s;
         }
 
+        pair<F, S> makepair(F f, S s){
+            return new pair<F, S>(f, s);
+        }
+
         @Override
         public int compareTo(pair<F, S> other) {
-            if (first == other.first) {
-                return second.compareTo(other.second);
-            } else {
-                return first.compareTo(other.first);
-            }
+            if (first == other.first) return second.compareTo(other.second);
+            return first.compareTo(other.first);
         }
 
         @Override
@@ -41,14 +38,3 @@
             return "(" + first + ", " + second + ")";
         }
     }
-
-
-
-
-
-
-
-
-
-
-    
