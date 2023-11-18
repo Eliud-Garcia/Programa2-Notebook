@@ -26,6 +26,7 @@
         };
 
         PriorityQueue<edge> pq = new PriorityQueue<>(cmp);
+        Arrays.fill(dis, INF);
 
         // new edge(node, weight);
         pq.add(new edge(s, 0));
