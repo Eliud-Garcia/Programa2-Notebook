@@ -1,0 +1,54 @@
+
+{
+	"main": {
+        "scope": "java",
+        "prefix": "m",
+        "body": [
+			"import java.io.*;",
+			"import java.util.*;",
+			"import static java.lang.Math.*;",
+            "public class Main {",
+            "    public static void main(String[] args) {",
+            "",
+            "",
+            "        sa.close();",
+            "    }",
+            "",
+            "    static String next() {",
+            "        while (st == null || !st.hasMoreElements()) {",
+            "            try { st = new StringTokenizer(en.readLine());}",
+            "            catch (Exception e) {e.printStackTrace();}",
+            "        }",
+            "        return st.nextToken();",
+            "    }",
+            "    static int nextInt() {",
+            "        return Integer.parseInt(next());",
+            "    }",
+            "    static long nextLong() {",
+            "        return Long.parseLong(next());",
+            "    }",
+            "    static double nextDouble() {",
+            "        return Double.parseDouble(next());",
+            "    }",
+            "    static PrintWriter sa = new PrintWriter(new OutputStreamWriter(System.out));",
+            "    static BufferedReader en = new BufferedReader(new InputStreamReader(System.in));",
+            "    static StringTokenizer st;",
+            "}"
+        ],
+        "description": "Main Java class with input/output setup and utility methods"
+    },
+	"print": {
+		"prefix": "print",
+		"body": [
+			"sa.print($0+\"\\n\");",
+		],
+		"description": "out user"
+	},
+	"arr": {
+		"prefix": "read",
+		"body": [
+			"Arrays.setAll($0, i-> nextInt());",
+		],
+		"description": "out user"
+	},
+}
