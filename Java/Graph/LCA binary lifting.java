@@ -1,69 +1,109 @@
-    
+
+
     //build = n log(n)
     //query = log(n)
-    static int n, l, q;
+    
+    static int n, log, q;
     static List<Integer> tree[];
-    static int timer;
-    static int tin[], tout[], dis[];
+    static int depth[];
     static int up[][];
- 
-    static void dfs(int v, int p) {
-        tin[v] = ++timer;
-        up[v][0] = p;
-        for (int i = 1; i <= l; ++i)
-            up[v][i] = up[up[v][i - 1]][i - 1];
-        for (int u : tree[v]){
-            if (u != p){
-                dis[u] = dis[v] + 1;
-                dfs(u, v);
+
+    static void dfs(int node, int p, int d) {
+        up[0][node] = p;
+        depth[node] = d;
+        for (int u : tree[node]) {
+            if (u == p)
+                continue;
+            depth[u] = depth[node] + 1;
+            dfs(u, node, d + 1);
+        }
+    }
+
+    static void build(int n) {
+        for (int a[] : up) {
+            Arrays.fill(a, -1);
+        }
+        dfs(1, 1, 0);
+        for (int i = 1; i < log; i++) {
+            for (int u = 0; u < n; u++) {
+                if (up[i - 1][u] != -1) {
+                    up[i][u] = up[i - 1][up[i - 1][u]];
+                }
             }
         }
-        tout[v] = ++timer;
     }
- 
-    static boolean is_ancestor(int u, int v) {
-        return tin[u] <= tin[v] && tout[u] >= tout[v];
-    }
- 
+
     static int lca(int u, int v) {
-        if (is_ancestor(u, v))
-            return u;
-        if (is_ancestor(v, u))
-            return v;
-        for (int i = l; i >= 0; --i) {
-            if (!is_ancestor(up[u][i], v)){
-                u = up[u][i];
+        if (depth[u] > depth[v]) {
+            int x = u;
+            u = v;
+            v = x;
+        }
+        int dis = depth[v] - depth[u];
+        for (int i = log - 1; i >= 0; i--) {
+            if (((dis >> i) & 1) == 1) {
+                v = up[i][v];
             }
         }
-        return up[u][0];
+        if (u == v)
+            return u;
+        for (int i = log - 1; i >= 0; i--) {
+            if (up[i][v] != up[i][u]) {
+                u = up[i][u];
+                v = up[i][v];
+            }
+        }
+        return up[0][v];
     }
 
     public static void main(String[] args) {
         n = nextInt();
-        q = nextInt();
         tree = new List[n + 1];
-        tin = new int[n + 1];
-        tout = new int[n + 1];
-        dis = new int[n + 1];
-        timer = 0;
-        l = (int) ceil(log(n + 1) / log(2));
-        up = new int[n + 1][l + 1];
-
+        depth = new int[n + 1];
+        log = (int) (ceil(log(n + 1) / log(2)));
+        up = new int[log + 1][n + 1];
         Arrays.setAll(tree, i -> new ArrayList<>());
-        int a, b;
+
+        int a, b, c;
         for (int i = 0; i < n - 1; i++) {
             a = nextInt();
             b = nextInt();
             tree[a].add(b);
             tree[b].add(a);
         }
-        dfs(1, 1);
+        build(n + 1);
+        q = nextInt();
         while (q-- > 0) {
             a = nextInt();
             b = nextInt();
-            //distancia entre a y b
-            sa.print(dis[a] + dis[b] - (2 * dis[lca(a, b)]) + "\n");
+            c = nextInt();
+            int ancestor = lca(a, b);
+            int disAB = depth[a] + depth[b] - (2 * depth[ancestor]);
+            int disA_lca = depth[a] - depth[ancestor];
+            if (disAB <= c) {
+                sa.print(b + "\n");
+            } else {
+                if (disA_lca >= c) {
+                    //nos acercamos dando brincos
+                    //en potencias de 2
+                    for (int k = log; k >= 0; k--) {
+                        if (((c >> k) & 1) == 1) {
+                            a = up[k][a];
+                        }
+                    }
+                    sa.print(a + "\n");
+                } else {
+                    int df = disAB - c;
+                    for (int k = log; k >= 0; k--) {
+                        if (((df >> k) & 1) == 1) {
+                            b = up[k][b];
+                        }
+                    }
+                    sa.print(b + "\n");
+                }
+            }
         }
 
         sa.close();
     }
+    //https://codeforces.com/gym/102694/problem/C/
