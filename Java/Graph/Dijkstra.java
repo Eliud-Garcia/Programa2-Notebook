@@ -51,6 +51,7 @@
         m = nextInt();
  
         g = new ArrayList[n + 1];
+        par = new int[n + 1];
         Arrays.setAll(g, i -> new ArrayList<>());
 
         int u, v;
