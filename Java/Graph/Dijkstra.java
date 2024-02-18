@@ -1,33 +1,32 @@
 
-    static final long INF = Long.MAX_VALUE;
+    static  long INF = Long.MAX_VALUE/10;
     static List<edge> g[];
-    static long dis[];
+    static int n, m;
     static int par[];
-    static boolean vis[];
-
+ 
     static class edge {
-        int v;
+        int u, v;
         long w;
-
-        edge(int node, long weight) {
-            v = node;
+        edge(int n1, int n2, long weight) {
+            u = n1;
+            v = n2;
             w = weight;
         }
     }
 
-    // dijkstra(int source, int des)
-    static boolean dijkstra(int s, int t) {
+    static long[] dijkstra(int s) {
         Comparator<edge> cmp = new Comparator<edge>() {
             @Override
             public int compare(edge a, edge b) {
                 return Long.compare(a.w, b.w);
             }
         };
-        PriorityQueue<edge> pq = new PriorityQueue<>(cmp);
-        vis = new boolean[n + 1];
+        boolean vis[] = new boolean[n + 1];
+        long dis[] = new long[n + 1];
+
         Arrays.fill(dis, INF);
-        // new edge(node, weight);
-        pq.add(new edge(s, 0));
+        PriorityQueue<edge> pq = new PriorityQueue<>(cmp);
+        pq.add(new edge(s, s, 0));
         dis[s] = 0;
         par[s] = -1;
         while (!pq.isEmpty()) {
@@ -39,37 +38,57 @@
                 long w = next.w;
                 if (!vis[v] && dis[u] + w < dis[v]) {
                     dis[v] = dis[u] + w;
-                    pq.add(new edge(v, dis[v]));
+                    pq.add(new edge(u, v, dis[v]));
                     par[v] = u;
                 }
             }
         }
-        return false;
+        return dis;
     }
 
-    public static void main(String[] args) throws IOException {
-        int n = nextInt();
-        int m = nextInt();
-
-        g = new ArrayList[n + 3];
-        dis = new long[n + 3];
-        par = new int[n + 3];
-        vis = new boolean[n + 3];
+    public static void main(String[] args){
+        n = nextInt();
+        m = nextInt();
+ 
+        g = new ArrayList[n + 1];
         Arrays.setAll(g, i -> new ArrayList<>());
 
-        int a, b;
+        int u, v;
         long w;
+        edge aristas[] = new edge[m];
         for (int i = 0; i < m; i++) {
-            a = nextInt();
-            b = nextInt();
+            u = nextInt();
+            v = nextInt();
             w = nextLong();
-            // adj[source].add({dest, weight});
-            g[a].add(new edge(b, w));
-            g[b].add(new edge(a, w));
+            g[u].add(new edge(u, v, w));
+            g[v].add(new edge(v, u, w));
+            aristas[i] = new edge(u, v, w);
+        }
+        
+        //#####################################################
+        //verificar si una arista está en el camino
+        //mas corto de A a B  
+        long disSource[] = dijkstra(a);
+        long minDis = disSource[b];
+        
+        long disDest[] = dijkstra(b);
+
+        for (edge e : aristas) {
+            //edge is on shortest path
+            if(disSource[e.u] + e.w + disDest[e.v] == minDis){
+                continue;
+            }
+            //edge is on shortest path
+            if(disSource[e.v] + e.w + disDest[e.u] == minDis){
+                continue;
+            }
         }
 
-        // rebuild path
-        if (dijkstra(1, n)) {
+        //#####################################################
+        // reconstruir camino desde A hasta B
+        int a = 1; int b = n;
+        long dis [] = dijkstra(a);
+        if (dis[n] != INF) { //o usar array de visitados
             StringBuilder ans = new StringBuilder();
             List<Integer> path = new ArrayList<>();
             for (b = n; b != -1; b = par[b])
@@ -81,22 +100,6 @@
             sa.println(ans);
         } else {
             sa.println("-1");
-        }
-
-        //check if an edge is on the shortest path
-        long disSource[] = dijkstra(a, b);
-        long minDis = disSource[b];
-        long disDest[] = dijkstra(b, a);
-
-        for (edge e : edges) {
-            //edge is on shortest path
-            if(disSource[e.u] + e.w + disDest[e.v] == minDis){
-                continue;
-            }
-            //edge is on shortest path
-            if(disSource[e.v] + e.w + disDest[e.u] == minDis){
-                continue;
-            }
         }
 
         sa.close();
