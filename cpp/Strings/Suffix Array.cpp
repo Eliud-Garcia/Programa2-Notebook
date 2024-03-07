@@ -1,40 +1,43 @@
-
 #include <bits/stdc++.h>
 using namespace std;
 
 #define ln '\n'
 #define all(x) x.begin(), x.end()
-#define ll long long
-#define vi vector<int>
-#define forn(i, a, b) for (int i = a; i < b; i++)
+#define forn(i, n) for(int i = 0; i < n; i++)
+#define forab(i, a, b) for (int i = a; i < b; i++)
+#define pb push_back
 #define sz(x) ((int) x.size())
+
+typedef long long ll;
+typedef vector<int> vi;
+typedef vector<bool> vb;
+typedef vector<ll> vll;
+
 
 struct SuffixArray {
     int K = 256; // alphabet size
     int n;
     vi sa, lcp, c, cnt;
 
-    vi make_suffix_array(string& str)
-    {
+    vi build(string& str){
         string s = str;
         s += "$";
-        n = s.length();
+        n = sz(s);
         sa = vi(n);
         c = vi(2 * n);
         cnt = vi((max(n, K)));
-
-        forn (k, 0, n) {
+        forab (k, 0, n) {
             cnt[(int)(s[k])]++;
         }
-        forn (k, 1, K) {
+        forab (k, 1, K) {
             cnt[k] += cnt[k - 1];
         }
-        forn (k, 0, n) {
+        forab (k, 0, n) {
             sa[--cnt[(int)(s[k])]] = k;
         }
         c[sa[0]] = 0;
         int classes = 1;
-        forn (k, 1, n) {
+        forab (k, 1, n) {
             if (s[sa[k]] != s[sa[k - 1]]) {
                 classes++;
             }
@@ -44,19 +47,17 @@ struct SuffixArray {
         vi cn(2 * n);
 
         for (int h = 0; (1 << h) < n; h++) {
-            forn (k, 0, n) {
+            forab (k, 0, n) {
                 pn[k] = sa[k] - (1 << h);
                 if (pn[k] < 0) {
                     pn[k] += n;
                 }
             }
-
             fill(all(cnt), 0);
-
-            forn (k, 0, n) {
+            forab (k, 0, n) {
                 cnt[c[pn[k]]]++;
             }
-            forn (k, 1, classes) {
+            forab (k, 1, classes) {
                 cnt[k] += cnt[k - 1];
             }
             for (int k = n - 1; k >= 0; k--) {
@@ -64,22 +65,18 @@ struct SuffixArray {
             }
             cn[sa[0]] = 0;
             classes = 1;
-            forn (k, 1, n) {
+            forab (k, 1, n) {
                 int cur1 = c[sa[k]];
                 int cur2 = c[sa[k] + (1 << h)];
                 int prev1 = c[sa[k - 1]];
                 int prev2 = c[sa[k - 1] + (1 << h)];
-
                 if (cur1 != prev1 || cur2 != prev2) {
                     classes++;
                 }
                 cn[sa[k]] = classes - 1;
             }
-
-            // swap c and cn
-            swap(c, cn);
+            swap(c, cn);// swap c and cn
         }
-
         return sa;
     }
 
@@ -90,14 +87,13 @@ struct SuffixArray {
      * tracks how many characters two sorted
      * adjacent suffixes have in common.
      */
-    void kasai(string& str)
-    {
+    void kasai(string& str){
         string s = str;
         s += "$";
-        int n = s.length();
+        int n = sz(s);
         lcp = vi(n);
         vi inv(n);
-        forn (i, 0, n)
+        forab (i, 0, n)
             inv[sa[i]] = i;
         for (int i = 0, k = 0; i < n; i++) {
             if (inv[i] == n - 1) {
@@ -117,14 +113,13 @@ struct SuffixArray {
      * n = s.length();
      * unique subStrings of s = (n*(n + 1)/2) - (Σ lcp[i]);
      */
-    ll uniqueSubStrings(string& str)
-    {
+    ll uniqueSubStrings(string& str){
         string s = str;
-        make_suffix_array(s);
+        build(s);
         kasai(s);
         int n = s.length();
         ll ans = n - sa[0];
-        forn (i, 1, lcp.size()) {
+        forab (i, 1, lcp.size()) {
             ans += (n - sa[i]) - lcp[i - 1];
         }
         return ans;
@@ -141,11 +136,9 @@ struct SuffixArray {
      * one should be inside s1 and other should be inside s2
      * 
      * such that the length of their common prefix is a big as possible
-     * 
      */
-
-    string longestCommonSubString(string& s1, string& s2)
-    {
+    //longest common substring
+    string lcs(string& s1, string& s2){
         string combined = s1;
 
         int leftS1 = 0;
@@ -156,12 +149,12 @@ struct SuffixArray {
         combined += (s2);
         int rightS2 = combined.length();
 
-        make_suffix_array(combined);
+        build(combined);
         kasai(combined);
         int MAX = 0;
         int start = -1;
 
-        forn (i, 0, sa.size() - 1) {
+        forab (i, 0, sa.size() - 1) {
             // if sa[i] inside s1 && sa[i + 1] inside s2
             if (sa[i] >= leftS1 && sa[i] < rightS1 && sa[i + 1] >= leftS2 && sa[i + 1] < rightS2) {
                 if (lcp[i] > MAX) {
@@ -188,62 +181,54 @@ struct SuffixArray {
         }
     }
 
-    int match(string& s, string& w)
-    {
-        int n = s.length();
+    int match(string& s, string& w){
+        int n = sz(s);
         int l = 1;
         int r = n;
-        int ansl = -1;
-
+        int lower = -1;
         while (l <= r) {
             int mid = l + (r - l) / 2;
-
             if (compare(s, sa[mid], w) >= 0) {
-                ansl = mid;
+                lower = mid;
                 r = mid - 1;
             } else {
                 l = mid + 1;
             }
         }
-
         l = 1;
         r = n;
-        int ansr = -1;
-
+        int upper = -1;
         while (l <= r) {
             int mid = l + (r - l) / 2;
-
             if (compare(s, sa[mid], w) <= 0) {
-                ansr = mid;
+                upper = mid;
                 l = mid + 1;
             } else {
                 r = mid - 1;
             }
         }
-
-        if (ansl == -1 || compare(s, sa[ansl], w) != 0) {
-            return -1;
+        upper++;
+        if (lower == -1 || compare(s, sa[lower], w) != 0) {
+            return -1; // no aparece
         } else {
-            return ansr - ansl + 1;
+            //cantidad de veces que aparece
+            return upper - lower + 1;
         }
     }
 
-    int compare(string& s, int x, string& qs)
-    {
-        int n = s.length();
-        int qn = qs.length();
+    int compare(string& s, int x, string& w){
+        int n = sz(s);
+        int qn = sz(w);
 
         int i = 0;
-        while (i + x < n && i < qn && s[i + x] == qs[i])
+        while (i + x < n && i < qn && s[i + x] == w[i])
             i++;
-
         if (i >= qn) {
             return 0;
         } else if (i + x >= n) {
             return -1;
         }
-
-        return (int)s[i + x] - (int)qs[i];
+        return (int)s[i + x] - (int)w[i];
     }
 };
 
@@ -256,7 +241,7 @@ int main()
     string s, t;
     cin >> s >> t;
     SuffixArray sf;
-    sf.longestCommonSubString(s, t);
+    sf.lcs(s, t);
 
     return 0;
 }
