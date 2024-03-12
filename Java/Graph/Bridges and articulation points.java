@@ -1,54 +1,36 @@
 
-    //Tarjan's Algorithm
-    //Finding bridges in a graph in O(N + M)
-    //Undirected graph.
-    
+    // Tarjan's Algorithm
+    // Finding bridges in a graph in O(N + M)
+    // Undirected graph.
+
     static List<Integer> g[];
-    static int tin[];
-    static int low[];
+    static int tin[], low[];
     static int timer = 0;
-    //static List<edge> bridges;
-    //static List<Integer> articPoints;
-    static void dfsBr(int node, int p){
-        tin[node] = low[node] = timer++;
-        for (int next : g[node]) {
-            if(next == p) continue;
-            if(tin[next] == -1){
-                dfsBr(next, node);
-                low[node] = min(low[node], low[next]);
-                if(tin[node] < low[next]){
-                    //is bridge (a, b)
-                    //bridges.add(new edge(node, next));
-                }
-            }else{
-                low[node] = min(low[node], tin[next]);
+    static List<int[]> bridges;
+    static boolean is_articulation[], vis[];
+
+    static void dfs(int v, int p) {
+        vis[v] = true;
+        tin[v] = low[v] = timer++;
+        int children = 0;
+        for (int u : g[v]) {
+            if (u == p) continue;
+            if (vis[u]) {
+                low[v] = min(low[v], tin[u]);
+            } else {
+                dfs(u, v);
+                low[v] = min(low[v], low[u]);
+                if (low[u] >= tin[v] && p != -1)
+                    is_articulation[v] = true;
+                ++children;
+                if (low[u] > tin[v])
+                    bridges.add(new int[] { v, u });
             }
         }
+        if (p == -1 && children > 1)
+            is_articulation[v] = true;
     }
 
-    //articulation points
-    static void dfsAP(int node, int p){
-        tin[node] = low[node] = timer++;
-        int children = 0;
-        for (int next : g[node]) {
-            if(next == p) continue;
-            if(tin[next] == -1){
-                children++;
-                dfsAP(next, node);
-                low[node] = min(low[node], low[next]);
-                if(tin[node] <= low[next] && p!= - 1){
-                    // node is a articulation point
-                    //articPoints.add(node);
-                }
-            }else{
-                low[node] = min(low[node], tin[next]);
-            }
-        }
-        if(p == -1 && children > 1){
-            sa.print(node+"\n");
-        }
-    }
-    
     static int n, m;
     public static void main(String[] args) {
         n = nextInt();
@@ -57,10 +39,11 @@
         g = new List[n + 1];
         tin = new int[n + 1];
         low = new int[n + 1];
-        //bridges = new ArrayList<>();
+        vis = new boolean[n + 1];
+        is_articulation = new boolean[n + 1];
+        bridges = new ArrayList<>();
         Arrays.setAll(g, i -> new ArrayList<>());
-        Arrays.fill(tin, -1);
-        
+
         int a, b;
         for (int i = 0; i < m; i++) {
             a = nextInt();
@@ -69,19 +52,25 @@
             g[b].add(a);
         }
 
-        //find bridges
+        // find bridges and articulation points
         for (int i = 1; i <= n; i++) {
-            if(tin[i] == -1){
-                dfsBr(i, -1);
+            if(!vis[i]){
+                dfs(i, -1);
+            }
+        }
+
+        // print articulation points
+        for (int i = 1; i <= n; i++) {
+            if (is_articulation[i]) {
+                sa.print(i + "\n");
             }
         }
         
-        Arrays.fill(tin, -1);
-        //find articulation points
-        for (int i = 1; i <= n; i++) {
-            if(tin[i] == -1){
-                dfsAP(i, -1);
-            }
+        // print bridges
+        for (int[] i : bridges) {
+            sa.print(i[0] + "-" + i[1] + "\n");
         }
+        
+
         sa.close();
     }
