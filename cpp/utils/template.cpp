@@ -2,16 +2,22 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-void _print() { cerr << "]" << endl; }
+void _print() {
+    cerr << "]" << endl;
+}
 template<typename T, typename... V>
-void _print(T t, V... v) { cerr << t; if (sizeof...(v)) cerr << ", "; _print(v...); }
+void _print(T t, V... v) {
+    cerr << t;
+    if (sizeof...(v)) cerr << ", ";
+    _print(v...);
+}
 
-#define LOCAL
+
 #ifdef LOCAL
-  #define dbg(x...) cerr << "[" << #x << "]: ["; _print(x)
+#define dbg(x...) cerr << "[" << #x << "]: ["; _print(x)
 #else
-  #define dbg(x...)
-  #define endl '\n'
+#define dbg(x...)
+#define endl '\n'
 #endif
 
 #define pb push_back
@@ -28,11 +34,20 @@ typedef vector<int> vi;
 typedef vector<bool> vb;
 typedef vector<ll> vll;
 typedef pair<int, int> ii;
-//Shhhhhhhhhh
-int main()
-{
+//Programa2
+int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
+    cout.tie(0);
+
+    #ifdef LOCAL
+    freopen("in.txt", "r", stdin);
+    freopen("out.txt", "w", stdout);
+    #endif LOCAL
+
+    //codes here
+    
+
 
     return 0;
 }
