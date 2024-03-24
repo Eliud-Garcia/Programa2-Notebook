@@ -36,7 +36,7 @@ struct Tarjan {
   };
   
   vector<vi> getComp(){
-    forn (i, n)
+    forab (i, 1,  n)
       if (num[i] == -1) dfs(i);
     vector<vi> cc(scc);
     forab(i, 1, n){
