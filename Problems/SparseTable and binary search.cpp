@@ -1,50 +1,54 @@
+#include <bits/stdc++.h>
+using namespace std;
 
+#define ln '\n'
+#define all(x) x.begin(), x.end()
+#define forn(i, n) for (int i = 0; i < n; i++)
+#define forab(i, a, b) for (int i = a; i < b; i++)
+#define pb push_back
+
+typedef long long ll;
+typedef vector<int> vi;
+typedef vector<bool> vb;
+typedef vector<ll> vll;
+typedef pair<int, int> ii;
 
 /*
-    buscando el siguiente menor con
-    sparse table y busqueda binaria
-    https://codeforces.com/gym/104603/problem/A
+buscando el siguiente menor con
+sparse table y busqueda binaria
+https://codeforces.com/gym/104603/problem/A
 */
-
-#include <bits/stdc++.h>
-#define endl "\n"
-using namespace std;
 
 struct STable {
     int n, K;
-    vector<vector<pair<int, int>>> st;
-
-    STable(const vector<pair<int, int>>& a)
-    {
+    vector<vector<ii>> st;
+    STable(const vector<ii>& a){
         n = int(a.size());
         K = int(log2(n)) + 1;
-        st.assign(n + 1, vector<pair<int, int>>(K));
-        for (int i = 0; i < n; i++)
+        st.assign(n + 1, vector<ii>(K));
+        forn (i, n)
             st[i][0] = a[i];
-        for (int j = 0; j < K - 1; j++)
+        forn (j, K - 1)
             for (int i = 0; i + (1 << (j + 1)) <= n; ++i)
                 st[i][j + 1] = oper(st[i][j], st[i + (1 << j)][j]);
     }
 
-    pair<int, int> oper(pair<int, int>& a, pair<int, int>& b)
-    {
+    ii oper(ii &a, ii &b){
         return min(a, b);
     }
 
-    pair<int, int> query(int l, int r)
-    {
+    ii query(int l, int r){
         int k = 31 - __builtin_clz(r - l + 1);
         return oper(st[l][k], st[r - (1 << k) + 1][k]);
     }
 };
 
-pair<int, int> search(int l, int r, int candy, STable& st)
-{
-    pair<int, int> ans = { (int)1e9 + 10, -1 };
+ii search(int l, int r, int candy, STable& st){
+    ii ans = {1e9 + 10, -1};
     while (l <= r) {
         int mid = l + (r - l) / 2;
-        pair<int, int> left = st.query(l, mid);
-        pair<int, int> right = st.query(mid, r);
+        ii left = st.query(l, mid);
+        ii right = st.query(mid, r);
 
         if (left.first <= candy) {
             ans = left;
@@ -68,24 +72,23 @@ int main()
     cout.tie(0);
     int n, m;
     cin >> n >> m;
-    vector<int> viaje(n);
-    for (int i = 0; i < n; i++) {
+    vi viaje(n);
+    forn(i, n){
         cin >> viaje[i];
     }
-    vector<pair<int, int>> empleados(m);
-    for (int i = 0; i < m; i++) {
+    vector<ii> empleados(m);
+    forn(i, m){
         int e;
         cin >> e;
         empleados[i] = { e, i };
     }
-
     STable st = STable(empleados);
-    for (int i = 0; i < n; i++) {
+    forn (i, n) {
         int candy = viaje[i];
         int l = 0;
         int r = m - 1;
         while (true) {
-            pair<int, int> ans;
+            ii ans;
             ans = search(l, r, candy, st);
             if (ans.first > candy) {
                 break;
