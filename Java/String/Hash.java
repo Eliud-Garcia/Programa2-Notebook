@@ -1,7 +1,6 @@
 static class str_hash {
     long c, mod;
     long[] h, p;
-
     //cx = 131
     //modx = 1e9 + 7
     str_hash(String s, long cx, long modx) {
@@ -24,7 +23,7 @@ static class str_hash {
 }
 
  //binaria sobre el Hash
- static int bs(List<Long> a, long x) {
+static int bs(List<Long> a, long x) {
     int l = 0;
     int r = a.size() - 1;
     while (l <= r) {

@@ -1,17 +1,14 @@
-
-    // Lyndon Factorization
-
-    /*
-     * The problem:
-     * Given a string S of size N
-     * A right-rotation is that move the leftmost character to rightmost of S
-     * Find the least right-rotation to make S
-     * become the smallest lexicographical ordered string
-     */
-
-    // https://codeforces.com/blog/entry/90035#duval
-
-    // devuelve el indice donde comienza la rotación lexicograficamente menor de s.
+// Lyndon Factorization
+/*
+* The problem:
+* Given a string S of size N
+* A right-rotation is that move the leftmost character to rightmost of S
+* Find the least right-rotation to make S
+* become the smallest lexicographical ordered string
+*/
+// https://codeforces.com/blog/entry/90035#duval
+// devuelve el indice donde comienza la rotación 
+//lexicograficamente menor de s.
     static int minimum_expression(String s) {
         s = s + s; // si no se concatena devuelve el indice del sufijo menor
         int len = s.length(), i = 0, j = 1, k = 0;
