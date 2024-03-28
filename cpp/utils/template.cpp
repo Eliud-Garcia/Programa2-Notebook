@@ -12,7 +12,6 @@ void _print(T t, V... v) {
     _print(v...);
 }
 
-
 #ifdef LOCAL
 #define dbg(x...) cerr << "[" << #x << "]: ["; _print(x)
 #else
@@ -46,8 +45,5 @@ int main() {
     #endif LOCAL
 
     //codes here
-    
-
-
     return 0;
 }
