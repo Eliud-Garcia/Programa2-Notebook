@@ -3,7 +3,7 @@ import java.util.*;
 import static java.lang.Math.*;
 public class Main {
     public static void main(String[] args) throws IOException {
-        if(args[0].equals("input")){
+        if(args.length == 1){
             en = new BufferedReader(new FileReader("in.txt"));
             sa = new PrintWriter(new BufferedWriter(new FileWriter("out.txt")));
         }
