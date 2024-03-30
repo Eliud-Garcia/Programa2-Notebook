@@ -8,17 +8,31 @@ vi pre(int n){
         int x = i;
         string s;
         bool turn = 0;
-        while(j--){
+        while (j--) {
             int bit = (x >> j) & 1;
-            if(bit) turn = 1;
-            if(turn){
-                s+= (bit ? "1" : "0");
+            if (bit)
+                turn = 1;
+            if (turn) {
+                s += (bit ? "1" : "0");
             }
         }
         int X = stoi(s);
         bin.pb(X);
     }
     return bin;
+}
+
+string binString(ll x){
+  int j = 32;//bits
+  string s;
+  bool turn = 0;
+  while (j--) {
+    int bit = (x >> j) & 1;
+    if (bit) turn = 1;
+    if (turn) s += (bit ? "1" : "0");
+  }
+  if(sz(s) == 0)s+="0";
+  return s;
 }
 //dado un N decir si se puede formar
 //por la multiplicacion de numeros
@@ -47,3 +61,4 @@ int main(){
     }   
     return 0;
 }
+
