@@ -1,29 +1,28 @@
 import java.io.*;
 import java.util.*;
 import static java.lang.Math.*;
-
 public class Main {
-    public static void main(String[] args)  {
-        //code here
+    public static void main(String[] args) throws IOException {
+        if(args[0].equals("input")){
+            en = new BufferedReader(new FileReader("in.txt"));
+            sa = new PrintWriter(new BufferedWriter(new FileWriter("out.txt")));
+        }
+        
+
         sa.close();
     }
-    static String next()  {
-        while (st == null || !st.hasMoreElements()) {
-            try{ st = new StringTokenizer(en.readLine());}
-            catch(Exception e){e.printStackTrace();}
+
+    static String next(){
+        while (sten == null || !sten.hasMoreElements()) {
+            try { sten = new StringTokenizer(en.readLine());}
+            catch (Exception e) {e.printStackTrace();}
         }
-        return st.nextToken();
-    }
-    static String nextLine(){
-        String str = "";
-        try{str = en.readLine();}
-        catch(Exception e){e.printStackTrace();}
-        return str;
+        return sten.nextToken();
     }
     static int nextInt(){
         return Integer.parseInt(next());
     }
-    static long nextLong() {
+    static long nextLong(){
         return Long.parseLong(next());
     }
     static double nextDouble(){
@@ -31,5 +30,5 @@ public class Main {
     }
     static PrintWriter sa = new PrintWriter(new OutputStreamWriter(System.out));
     static BufferedReader en = new BufferedReader(new InputStreamReader(System.in));
-    static StringTokenizer st;
+    static StringTokenizer sten;
 }
