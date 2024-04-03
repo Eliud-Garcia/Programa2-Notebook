@@ -15,6 +15,12 @@
 			"#define form(i, n, m, x) for (int i = n; i < m; i += x)",
 			"#define rform(i, n, m, x) for (int i = n; i >= m; i -= x)",
 			"",
+			"#ifdef LOCAL",
+			"#include \"debug.h\""
+			"#else",
+			"#define dbg(...)",
+			"#endif",
+			"",
 			"typedef long long ll;",
 			"typedef vector<int> vi;",
 			"typedef vector<bool> vb;",
@@ -24,42 +30,23 @@
 			"	ios_base::sync_with_stdio(0);",
 			"	cin.tie(0);",
 			"	cout.tie(0);",
+			"	#ifdef LOCAL"
+			"	  freopen(\"in.txt\", \"r\", stdin);",
+			"	  //freopen(\"out.txt\", \"w\", stdout);",
+		  	"	#endif",
 			"	",
 			"	return 0;",
 			"}"
 		],
 		"description": "main user"
 	},
-	"cout": {
-		"prefix": "co",
+	
+	"read": {
+		"prefix": "r0",
 		"body": [
-			"cout << $0 << ln;",
+			"for(auto &i : ${array}) cin >> i;\n",
 		],
-		"description": "out user"
-	},
-	"ci": {
-		"prefix": "ci",
-		"body": [
-			"cin >> $0;",
-		],
-		"description": "input user"
-	},
-	"whileUser": {
-		"prefix": "wh",
-		"body": [
-			"while ( $0 ){\n\t",
-			"}",
-		],
-		"description": "while user"
-	},
-	"foreach": {
-		"prefix": "foreach",
-		"body": [
-			"for(auto ${var} : ${collection_to_loop}){\n",
-			"    $0",
-			"}",
-		],
-		"description": "foreach"
+		"description": "read"
 	},
 	
 }
