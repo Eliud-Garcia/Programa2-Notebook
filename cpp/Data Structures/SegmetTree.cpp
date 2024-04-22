@@ -50,13 +50,13 @@ struct STree {
       return 0;
     if (l <= tl && tr <= r) {
       if (st[v] <= x) {
-          /*
-          Para mayores st[v] <= x query max(a,b)
-          Para mayores o equ st[v] < x query max(a,b)
-          Para menores st[v] >= x query min(a,b)
-          Para menores o equ st[v] > x query min(a,b)
-          */
-          return 0;
+        /*
+        Para mayores st[v] <= x query max(a,b)
+        Para mayores o equ st[v] < x query max(a,b)
+        Para menores st[v] >= x query min(a,b)
+        Para menores o equ st[v] > x query min(a,b)
+        */
+        return 0;
       }
       if (tl == tr)
           return 1;
