@@ -53,16 +53,16 @@ int main(){
     cin >> n >> m;
     int a, b;
     forn(i, m){
-        cin >> a >> b;
-        g[a].pb(b);
+      cin >> a >> b;
+      g[a].pb(b);
     }
     Tarjan t(n + 1);
     vector<vi> components = t.getComp();
     for(vi cc: components){
-        for(int u: cc){
-            cout << u << " ";
-        }
-        cout << ln;
+      for(int u: cc){
+          cout << u << " ";
+      }
+      cout << ln;
     }
     return 0;
 }
