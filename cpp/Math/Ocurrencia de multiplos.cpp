@@ -6,7 +6,7 @@ void ocurrencia_multiplos(vi a){//O(nlogn)
 	unordered_map<int, int> mp;
 	forn(i, n){
 		if (a[i] <= n) {
-				mp[a[i]]++;
+			mp[a[i]]++;
 		}
 	}
 	forab(i, 1, n + 1){
