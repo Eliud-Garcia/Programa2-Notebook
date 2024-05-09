@@ -3,13 +3,27 @@ import java.util.*;
 import static java.lang.Math.*;
 public class Main {
     public static void main(String[] args) throws IOException {
-        if(args.length == 1){
-            en = new BufferedReader(new FileReader("in.txt"));
-            sa = new PrintWriter(new BufferedWriter(new FileWriter("out.txt")));
-        }
+        //en = new BufferedReader(new FileReader("in.txt"));
+        //sa = new PrintWriter(new BufferedWriter(new FileWriter("out.txt")));
         
+        while(input()){
+            int n = nextInt();
+            if(n == 0) break;
+            sa.print(n+"\n");
+        }
 
         sa.close();
+    }
+
+    static boolean input(){
+        String s;
+        boolean ok = false;
+        try{
+            s = en.readLine();
+            sten = new StringTokenizer(s);
+            ok = !(s.isBlank());
+        }catch(Exception e){}
+        return ok;
     }
 
     static String next(){
