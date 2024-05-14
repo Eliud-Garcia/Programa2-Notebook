@@ -3,13 +3,13 @@
 using namespace std;
 
 void _print() {
-    cerr << "]" << endl;
+  cerr << "]" << endl;
 }
 template<typename T, typename... V>
 void _print(T t, V... v) {
-    cerr << t;
-    if (sizeof...(v)) cerr << ", ";
-    _print(v...);
+  cerr << t;
+  if (sizeof...(v)) cerr << ", ";
+  _print(v...);
 }
 
 #ifdef LOCAL
@@ -33,17 +33,15 @@ typedef vector<int> vi;
 typedef vector<bool> vb;
 typedef vector<ll> vll;
 typedef pair<int, int> ii;
-//Programa2
 int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(0);
-    cout.tie(0);
-
-    #ifdef LOCAL
+  ios_base::sync_with_stdio(false);
+  cin.tie(0);
+  cout.tie(0);
+  #ifdef LOCAL
     freopen("in.txt", "r", stdin);
     freopen("out.txt", "w", stdout);
-    #endif LOCAL
+  #endif LOCAL
 
-    //codes here
-    return 0;
+  //codes here
+  return 0;
 }
