@@ -1,21 +1,8 @@
-#include <bits/stdc++.h>
-using namespace std;
-
-#define ln '\n'
-#define all(x) x.begin(), x.end()
-#define forn(i, n) for(int i = 0; i < n; i++)
-#define forab(i, a, b) for (int i = a; i < b; i++)
-#define sz(x) ((int) x.size())
-#define pb push_back
-
-typedef long long ll;
-typedef vector<int> vi;
-typedef vector<bool> vb;
-typedef vector<ll> vll;
 
 template<typename T>
 struct STree {
-  int n; vector<T> st, lazy;
+  int n;
+  vector<T> st, lazy;
   T neutro = T(0ll);
 
   STree(int m) {
@@ -31,7 +18,9 @@ struct STree {
     build(1, 0, n - 1, a);
   }
 
-  T oper(T a, T b) { return a | b; }
+  T oper(T a, T b) {
+    return a | b;
+  }
 
   void build(int v, int tl, int tr, vector<T> &a) {
     if(tl == tr) {
@@ -75,8 +64,12 @@ struct STree {
     return oper(query(v * 2, tl, tm, l, r), query(v * 2 + 1, tm + 1, tr, l, r));
   }
 
-  void upd(int l, int r, T val) { upd(1, 0, n - 1, l, r, val); }
-  T query(int l, int r) { return query(1, 0, n - 1, l, r); }
+  void upd(int l, int r, T val) {
+    upd(1, 0, n - 1, l, r, val);
+  }
+  T query(int l, int r) {
+    return query(1, 0, n - 1, l, r);
+  }
 };
 
 const int MAXN = 4e5 +5;
@@ -87,60 +80,61 @@ int timer = 0;
 
 int n, q;
 vi color;
-void dfs(int node, int par){
-    tin[node] = timer;
-    //se usa el color como el aplanado
-    //se puede cambiar segun sea
-    aplanado[timer] = color[node];
-    timer++;
-    for(int next: g[node]){
-        if(next != par){
-            dfs(next, node);
-        }
+void dfs(int node, int par) {
+  tin[node] = timer;
+  //se usa el color como el aplanado
+  //se puede cambiar segun sea
+  aplanado[timer] = color[node];
+  timer++;
+  for(int next: g[node]) {
+    if(next != par) {
+      dfs(next, node);
     }
-    tout[node] = timer - 1;
+  }
+  tout[node] = timer - 1;
 }
 // Ejemplo de uso
 //https://codeforces.com/contest/620/problem/E
 
-int main(){
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
-    cout.tie(0);
-    cin >> n >> q;
-    tin = vi(n + 1);
-    tout = vi(n + 1);
-    aplanado = vll(n + 1);
-    color = vi(n + 1);
-    forab(i, 1, n + 1){
-        int x; cin >> x;
-        color[i] = x;
+int main() {
+  ios_base::sync_with_stdio(0);
+  cin.tie(0);
+  cout.tie(0);
+  cin >> n >> q;
+  tin = vi(n + 1);
+  tout = vi(n + 1);
+  aplanado = vll(n + 1);
+  color = vi(n + 1);
+  forab(i, 1, n + 1) {
+    int x;
+    cin >> x;
+    color[i] = x;
+  }
+  int a, b;
+  forn(i, n - 1) {
+    cin >> a >> b;
+    g[a].pb(b);
+    g[b].pb(a);
+  }
+  dfs(1, 0);
+  int oper, v, c;
+  STree<ll> st(aplanado);
+  while(q--) {
+    cin >> oper;
+    if(oper == 1) {
+      cin >> v >> c;
+      // l = timepoEntrada
+      // r = tiempoSalida
+      // (tin[v], tout[v]) = subArbol del nodo v
+      //cambiamos el color del subarbol de v
+      st.upd(tin[v], tout[v], c);
+    } else {
+      cin >> v;
+      ll ans = st.query(tin[v], tout[v]);
+      //cantidad de colores diferentes en
+      //el subarbol de v
+      cout << __builtin_popcountll(ans) << ln;
     }
-    int a, b;
-    forn(i, n - 1){
-        cin >> a >> b;
-        g[a].pb(b);
-        g[b].pb(a);
-    }
-    dfs(1, 0);
-    int oper, v, c;
-    STree<ll> st(aplanado);
-    while(q--){
-        cin >> oper;
-        if(oper == 1){
-            cin >> v >> c;
-            // l = timepoEntrada
-            // r = tiempoSalida
-            // (tin[v], tout[v]) = subArbol del nodo v
-            //cambiamos el color del subarbol de v
-            st.upd(tin[v], tout[v], c);
-        }else{
-            cin >> v;
-            ll ans = st.query(tin[v], tout[v]);
-            //cantidad de colores diferentes en
-            //el subarbol de v
-            cout << __builtin_popcountll(ans) << ln;
-        }
-    }
-    return 0;
+  }
+  return 0;
 }
