@@ -1,7 +1,30 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define ln '\n'
+#define all(x) x.begin(), x.end()
+#define forn(i, n) for(int i = 0; i < n; i++)
+#define forab(i, a, b) for (int i = a; i < b; i++)
+#define pb push_back
+#define sz(x) int(x.size())
+#define rforn(i, n) for (int i = n-1; i >= 0; --i)
+#define form(i, n, m, x) for (int i = n; i < m; i += x)
+#define rform(i, n, m, x) for (int i = n; i >= m; i -= x)
+
+#ifdef LOCAL
+#include "debug.h"
+#else
+#define dbg(...)
+#endif
+
+typedef long long ll;
+typedef vector<int> vi;
+typedef vector<bool> vb;
+typedef vector<ll> vll;
+
 int n, q, LOG;
 const int MAXN = 5e5 + 5;
 vi g[MAXN];
-vi projects[MAXN];
 vi deep(MAXN);
 vector<vi> up;
 int cnt = 1;
@@ -45,10 +68,11 @@ int lca(int u, int v) {
   }
   return up[0][u];
 }
+
 int main() {
   cin >> n;
-  LOG = (int) (ceil(log2(n + 1)));
-  up.resize(LOG + 1, vi(n + 1));
+  LOG = int(log2(n + 1) + 1);
+  up = vector<vi>(LOG + 1, vi(n + 1));
   int a, b, c;
   forn (i, n - 1) {
     cin >> a >> b;
