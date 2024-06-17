@@ -1,4 +1,6 @@
-
+//Warning
+//STree recursive [l, r] from 0
+//STree iterative [l, r + 1) from 0
 template<typename T>
 struct STree {
   int n;
@@ -74,7 +76,8 @@ struct STree {
 
 const int MAXN = 4e5 +5;
 vi g[MAXN];
-vi tin, tout;
+int tin[MAXN];
+int tout[MAXN];
 vll aplanado;
 int timer = 0;
 
@@ -93,22 +96,14 @@ void dfs(int node, int par) {
   }
   tout[node] = timer - 1;
 }
-// Ejemplo de uso
-//https://codeforces.com/contest/620/problem/E
 
+//https://codeforces.com/contest/620/problem/E
 int main() {
-  ios_base::sync_with_stdio(0);
-  cin.tie(0);
-  cout.tie(0);
   cin >> n >> q;
-  tin = vi(n + 1);
-  tout = vi(n + 1);
-  aplanado = vll(n + 1);
   color = vi(n + 1);
+  aplanado = vll(n + 1);
   forab(i, 1, n + 1) {
-    int x;
-    cin >> x;
-    color[i] = x;
+    cin >> color[i];
   }
   int a, b;
   forn(i, n - 1) {
@@ -123,9 +118,9 @@ int main() {
     cin >> oper;
     if(oper == 1) {
       cin >> v >> c;
-      // l = timepoEntrada
-      // r = tiempoSalida
-      // (tin[v], tout[v]) = subArbol del nodo v
+      // l = tin[v]
+      // r = tout[v]
+      // (l, r) = subArbol del nodo v
       //cambiamos el color del subarbol de v
       st.upd(tin[v], tout[v], c);
     } else {
