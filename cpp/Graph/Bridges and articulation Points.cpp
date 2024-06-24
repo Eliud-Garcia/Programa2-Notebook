@@ -27,7 +27,7 @@ void dfs(int v, int p = -1){
         is_articulation[v] = true;
       ++children;
       if (low[u] > tin[v])
-        bridges.pb({ v, u });
+        bridges.pb({min(u, v), max(u, v)});
     }
   }
   if (p == -1 && children > 1)
@@ -57,8 +57,8 @@ int main(){
     }
   }
   // print bridges
-  for (auto i : bridges) {
-    cout << i.first << "-" << i.second << ln;
+  for (auto [u, v] : bridges) {
+    cout << u << " " << v;
   }
   return 0;
 }
