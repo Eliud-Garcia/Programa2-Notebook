@@ -130,3 +130,13 @@ int main() {
   }
   return 0;
 }
+
+//minimun number of edges
+//such that there are no
+//bridges in the new graph
+//ans = ceil(leaf / 2)
+
+//if we can remove only once
+//edge, we can reduce the number
+//of bridges to 
+//(bridges - tree diameter)
