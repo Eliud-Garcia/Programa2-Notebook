@@ -1,106 +1,93 @@
 
-// Corte minimo: vertices con dist[v]>=0 (del lado de src) VS.  dist[v]==-1 (del lado del dst)
-// Para el caso de la red de Bipartite Matching (Sean V1 y V2 los conjuntos mas proximos a src y dst respectivamente):
-// Reconstruir matching: para todo v1 en V1 ver las aristas a vertices de V2 con it->f>0, es arista del Matching
-// Min Vertex Cover: vertices de V1 con dist[v]==-1 + vertices de V2 con dist[v]>0
-// Max Independent Set: tomar los vertices NO tomados por el Min Vertex Cover
-// Max Clique: construir la red de G complemento (debe ser bipartito!) y encontrar un Max Independet Set
-// Min Edge Cover: tomar las aristas del matching + para todo vertices no cubierto hasta el momento, tomar cualquier arista de el
-// Complexity O(V^2*E)
+// Min Vertex Cover: vertices de L con level[v]==-1 y vertices de R con level[v]>0
+// Max Independent Set: vertices NO tomados por el Min Vertex Cover
+typedef pair<int, int> ii;
 
-typedef vector<pair<int, int>> vii;
-
-const ll inf = 1e18;
-struct edge {
-  int to, rev; ll cap, f{0};
-  edge(int to, int rev, ll cap): to(to), rev(rev), cap(cap){}
+struct FlowEdge {
+  int v, u;
+  ll cap, flow = 0;
+  FlowEdge(int _v, int _u, ll _cap) : v(_v), u(_u), cap(_cap) {}
 };
 
-struct Dinic{
-  int n, s, t; ll max_flow = 0;
-  vector<vector<edge>> g;
-  vi q, dis, work;
-  Dinic(int n): n(n), s(n-2), t(n-1), g(n), q(n){}
-  Dinic(int n, int s, int t): n(n), s(s), t(t), g(n), q(n){}
-  void addEdge(int s, int t, ll cap){
-    g[s].pb(edge(t, sz(g[t]), cap));
-    g[t].pb(edge(s, sz(g[s])-1, 0));
+struct Dinic { // O(V^2 * E)
+  const ll flow_inf = 1e18;
+  vector<FlowEdge> edges;
+  vector<vector<int>> g;
+  int n, m = 0;
+  int s, t;
+  vector<int> level, ptr;
+  queue<int> q;
+
+  Dinic(int _n, int _s, int _t) : n(_n), s(_s), t(_t) {
+    g.resize(n);
+    level.resize(n);
+    ptr.resize(n);
   }
 
-  bool bfs(){
-    dis.assign(n, -1), dis[s] = 0;
-    int qt = 0;
-    q[qt++] = s;
-    forn(qh, qt){
-      int u = q[qh];
-      for(auto& [v, _, cap, f]: g[u])
-        if(dis[v] < 0 && f < cap) dis[v] = dis[u] + 1, q[qt++] = v;
-    }
-    return dis[t] >= 0;
+  void add_edge(int v, int u, ll cap) {
+    edges.emplace_back(v, u, cap);
+    edges.emplace_back(u, v, 0);
+    g[v].push_back(m);
+    g[u].push_back(m + 1);
+    m += 2;
   }
-  ll dfs(int u, ll cur){
-    if(u == t) return cur;
-    for(int& i = work[u]; i < sz(g[u]); ++i){
-      auto& [v, rev, cap, f] = g[u][i];
-      if(cap <= f) continue;
-      if(dis[v] == dis[u] + 1){
-        ll df = dfs(v, min(cur, cap - f));
-        if(df > 0){
-          f += df, g[v][rev].f -= df;
-          return df;
-        }
+
+  bool bfs() {
+    while (sz(q)) {
+      int v = q.front();
+      q.pop();
+      for (int id : g[v]) {
+        if (edges[id].cap - edges[id].flow < 1) continue;
+        if (level[edges[id].u] != -1) continue;
+        level[edges[id].u] = level[v] + 1;
+        q.push(edges[id].u);
       }
+    }
+    return level[t] != -1;
+  }
+
+  ll dfs(int v, ll pushed) {
+    if (pushed == 0) return 0;
+    if (v == t) return pushed;
+    for (int &cid = ptr[v]; cid < sz(g[v]); ++cid) {
+      int id = g[v][cid];
+      int u = edges[id].u;
+      if (level[v] + 1 != level[u] || edges[id].cap - edges[id].flow < 1) continue;
+      ll tr = dfs(u, min(pushed, edges[id].cap - edges[id].flow));
+      if (tr == 0) continue;
+      edges[id].flow += tr;
+      edges[id ^ 1].flow -= tr;
+      return tr;
     }
     return 0;
   }
-  ll maxFlow(){
-    ll cur_flow = 0;
-    while(bfs()){
-      work.assign(n, 0);
-      while(ll delta = dfs(s, inf)) cur_flow += delta;
+
+  ll flow() {
+    ll f = 0;
+    while (true) {
+      fill(all(level), -1);
+      level[s] = 0;
+      q.push(s);
+      if (!bfs()) break;
+      fill(all(ptr), 0);
+      while (ll pushed = dfs(s, flow_inf)) {
+        f += pushed;
+      }
     }
-    max_flow += cur_flow;
-    // todos los nodos con dis[u]!=-1 vs los que tienen dis[v]==-1 forman el min-cut, (u,v)
-    return max_flow;
+    return f;
   }
-  vii min_cut(){
-    maxFlow();
-    vii cut;
-    forn(u, n){
-      if(dis[u] == -1) continue;
-      for(auto& e: g[u]) if(dis[e.to] == -1) cut.pb({u, e.to});
-    }
-    sort(all(cut)),  cut.resize(unique(all(cut)) - cut.begin());
+
+  vector<ii> min_cut() {
+    //llamar flow();
+    vector<ii> cut;
+    for (auto &e : edges)
+      if (level[e.v] != -1 && level[e.u] == -1 && e.cap > 0)
+        cut.pb({e.v, e.u});
     return cut;
   }
 };
+//Dinic dd(n + 2, s, t);
 
-int main() {
-  string s;
-  int n;
-  cin >> s >> n;
-  vector<set<char>> cubes(n);
-  forn(i, n) {
-    forn(j, 6) {
-      char c;
-      cin >> c;
-      cubes[i].insert(c);
-    }
-  }
-  int nodes = sz(s) + n + 2; //cantidad nodos
-  Dinic dd(nodes);
-  // S -> s[i]
-  forn(i, sz(s)) dd.addEdge(dd.s, i, 1);
-  //cubes[i] -> T
-  forn(i, n) dd.addEdge(sz(s) + i, dd.t, 1);
-  forn(i, sz(s)) {
-    forn(j, n) {
-      if(cubes[j].count(s[i])) {
-        dd.addEdge(i, sz(s) + j, 1);
-      }
-    }
-  }
-  ll flow = dd.maxFlow();
-  cout << (flow == sz(s) ? "YES" : "NO") <<ln;
-  return 0;
-}
+//int nodos = n + 5;
+//Dinic dd(nodos, nodos - 2, nodos - 1);
+
