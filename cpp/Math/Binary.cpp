@@ -31,7 +31,7 @@ string binString(ll x) {
     if (bit) turn = 1;
     if (turn) s += (bit ? "1" : "0");
   }
-  if(sz(s) == 0)s+="0";
+  if(sz(s) == 0) s+="0";
   return s;
 }
 //dado un N decir si se puede formar
