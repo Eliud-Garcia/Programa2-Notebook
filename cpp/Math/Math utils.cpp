@@ -21,6 +21,12 @@ ll lcm(ll a, ll b) {
   ll lcm = (a / gcd(a, b)) * b;
   return lcm > 0 ? lcm : -lcm;
 }
+//lcm(A, B, C, ....) = 
+//p1 max(a1, b1, c1, ...) * 
+//p2 max(a2, b2, c2, ...) * 
+//p3 max(a3, b3, c3, ...) * ... ...* pk max(ak, bk, ck, ...)
+//pi = prime, a1 = exponent
+
 //cuantas veces B puede restar a A
 x = floor(A/B + 0.0)
 
