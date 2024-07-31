@@ -1,15 +1,25 @@
-const int MOD = 1e9+7;
-int suma(int a, int b) {
+
+ll MOD = 1e9 + 7;
+
+ll inv_mod(ll a){
+  //binpow con MOD igual
+  return binpow(a, MOD - 2);
+}
+
+ll suma(ll a, ll b){
   return ((a % MOD) + (b % MOD)) % MOD;
 }
-int resta(int a, int b) {
-  return ((a % MOD) - (b % MOD)) % MOD;
+
+ll resta(ll a, ll b){
+  return ((a % MOD) - (b % MOD) + MOD) % MOD;
 }
-int mult(int a, int b) {
+
+ll multi(ll a, ll b){
   return ((a % MOD) * (b % MOD)) % MOD;
 }
-int div(int a, int b) {
-  return ((a % MOD) * (modInverse(b, MOD))) % MOD;
+
+ll divi(ll a, ll b){
+  return multi(a, inv_mod(b));
 }
 
 //GCD
@@ -25,7 +35,7 @@ ll lcm(ll a, ll b) {
 //p1 max(a1, b1, c1, ...) * 
 //p2 max(a2, b2, c2, ...) * 
 //p3 max(a3, b3, c3, ...) * ... ...* pk max(ak, bk, ck, ...)
-//pi = prime, a1 = exponent
+//pi = prime, ai = exponent
 
 //cuantas veces B puede restar a A
 x = floor(A/B + 0.0)
