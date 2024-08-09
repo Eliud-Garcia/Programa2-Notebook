@@ -1,7 +1,7 @@
 //digit dp
 //[0, a]
 const int MAXDIGT = 20;
-int num[MAXDIGT];
+short num[MAXDIGT];
 pair<ll, ll> dp[MAXDIGT][2];
 int n; // number of digits
 int k;
@@ -25,7 +25,7 @@ pair<ll, ll> go(int idx, bool is_eq){
 ll solve(ll x){
   string aux = to_string(x);
   n = sz(aux);
-  forn(i, n) num[i] = (aux[i] - '0');
+  forn(i, n) num[i] = short(aux[i] - '0');
   memset(dp, -1, sizeof dp);
   return go(0, 1).second;
 }
