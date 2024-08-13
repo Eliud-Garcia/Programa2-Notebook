@@ -1,10 +1,4 @@
 
-//String hashing:
-//Get polynomial hash for any substring in O(1) after O(n)
-//preprocessing.
-
-//Good values c = 137, mod = 10^9 + 7.
-//				   , mod = 1e18 + 9.
 struct hash_str {
   ll c, mod;
   vll h, p;
@@ -22,9 +16,58 @@ struct hash_str {
   }
 };
 
-//example
-string a, b;
-cin >> a >> b;
-ll mod = (long)1e9 + 7;
-hash_i aa(a, 131, mod);
-hash_i bb(b, 131, mod);
+bool is_pal(int l, int r,  hash_str &h1,  hash_str &h2) {
+  int l2 = sz(h1.h) - 2 - r;
+  int r2 = sz(h1.h) - 2 - l;
+  return (h1.get(l, r) == h2.get(l2, r2));
+}
+
+//how many substrings of a given string are palindromes.
+ll count_palindromes(string &s, hash_str &h1, hash_str &h2) {
+  ll ans = 0;
+
+  forn(i, sz(s)) {
+    // Palindromes odd length
+    int l = 0, r = min(i + 1, sz(s) - i);
+    while (l < r) {
+      ll mid = (l + r + 1) / 2;
+      if (is_pal(i - mid + 1, i + mid - 1, h1, h2)) {
+        l = mid;
+      } else {
+        r = mid - 1;
+      }
+    }
+    ans += l;
+
+    //Palindromes even length
+    l = 0, r = min(i + 1, sz(s) - i - 1);
+    while (l < r) {
+      ll mid = (l + r + 1) / 2;
+      if (is_pal(i - mid + 1, i + mid, h1, h2)) {
+        l = mid;
+      } else {
+        r = mid - 1;
+      }
+    }
+    ans += l;
+  }
+
+  return ans;
+}
+
+int main() {
+  ll mod = 1e9 + 7;
+  string s; cin >> s;
+
+  //normal hash
+  hash_str h1(s, 131, mod);
+
+  //reverse hash
+  string rev_s = s;
+  reverse(all(rev_s));
+  hash_str h2(rev_s, 131, mod);
+
+  ll ans = count_palindromes(s, h1, h2);
+  cout << ans << ln;
+  return 0;
+}
