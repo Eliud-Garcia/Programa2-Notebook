@@ -1,9 +1,9 @@
 
-//for each node, the longest distance to any other
-//edges with cost
-
+const int MAXN = 2e5 + 5;
+int n;
 ll down[MAXN], up[MAXN];
 vector<pair<int, ll>> tree[MAXN];
+
 void dfs_down(int u, int parent) {
   down[u] = 0;
   for (auto [v, w] : tree[u]) {
@@ -40,4 +40,19 @@ void dfs_up(int u, int parent) {
       dfs_up(v, u);
     }
   }
+}
+
+int main() {
+  //build tree
+
+  dfs_down(1, 1);
+  up[1] = 0;
+  dfs_up(1, 1);
+
+  forab(i, 1, n + 1){
+    ll best = max(up[i], down[i]);
+    if(i == n) printf("%lld\n", best);
+    else printf("%lld ", best);
+  }
+  return 0;
 }
