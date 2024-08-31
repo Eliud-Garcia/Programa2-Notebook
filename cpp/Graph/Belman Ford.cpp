@@ -1,96 +1,94 @@
-#include <bits/stdc++.h>
-using namespace std;
 
-#define ln '\n'
-#define all(x) x.begin(), x.end()
-#define forn(i, n) for(int i = 0; i < n; i++)
-#define forab(i, a, b) for (int i = a; i < b; i++)
-#define pb push_back
-
-typedef long long ll;
-typedef vector<int> vi;
-typedef vector<bool> vb;
-typedef vector<ll> vll;
-
-
-//shortest path
-const ll oo = 1e18 + 5;
-struct Edge {
-  int a, b, cost;
-};
 int n, m;
+const int MAXN = 2505;
+const int MAXM = 5005;
+const ll oo = 1e18 + 5;
 
-int main(){
-  ios_base::sync_with_stdio(0);
-  cin.tie(0);
-  cout.tie(0);
+array<ll, 3> edges[MAXM];
+int par[MAXN];
+ll dis[MAXN];
+
+int main() {
   cin >> n >> m;
-  vector<Edge> edges(m);
-  int a, b, c;
   forn(i, m){
-    cin >> a >> b >> c;
-    edges[i] = {a, b, c};
+    int a, b, w;
+    cin >> a >> b >> w;
+    edges[i] = {a, b, -w};
   }
-  int source = 1;
-  int dest = n;
-  vll d(n + 1, oo);//distancia
-  vi p(n + 1,  -1);//parent
-  d[source] = 0;
-  forn (i, n - 1){
-    for (Edge e : edges){
-      if (d[e.a] < oo){
-        d[e.b] = min(d[e.b], d[e.a] + e.cost);
-        p[e.b] = e.a;
+
+  //negative cycle
+  vb change(n + 1, 0);
+  forab(i, 1, n + 1) dis[i] = oo;
+  dis[1] = 0;
+  int x;
+  forn(i, n){
+    x = -1;
+    for(auto [a, b, w]: edges){
+      if(dis[a] < oo){
+        if(dis[b] > dis[a] + w){
+          if(i == n - 1) change[b] = 1;
+          dis[b] = max(-oo, dis[a] + w);
+          par[b] = a;
+          x = b;
+        }
       }
     }
   }
-  if (d[dest] == oo){
-    //no hay camino desde source hasta dest
-  }else{
-    cout <<"distancia minima = "<< d[dest] << ln;
+  bool cycle = (x != -1);
+  bool valid_cycle = 0;
+
+  if(cycle){
+    /*
+    int y = x;
+    forn(i, n) y = par[y];
     vi path;
-    for (int cur = dest; cur != -1; cur = p[cur])
+    for(int cur = y;; cur = par[cur]){
       path.pb(cur);
-    reverse(all(path));
-    for (int u : path)
-      cout << u << ' ';
+      if(cur == y && sz(path) > 1) break;
+    }
+    */
+    dfs1(1);//normal graph
+    dfs2(n);//reverse graph
+
+    forab(i, 1, n + 1){
+      if(change[i]){
+        if(vis1[i] && vis1[n]){
+          if(vis2[i] && vis2[1]){
+            valid_cycle = 1;
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  if(valid_cycle){
+    puts("-1");
+  }else{
+    printf("%lld\n", -dis[n]);
   }
   return 0;
 }
 
-/*#################*/
-
-//negative cycle
+  //shortest path
+  forab(i, 1, n + 1) dis[i] = oo;
   int source = 1;
-  vll d(n + 1, oo); //dist
-  vi p(n + 1, -1); //parent
+  int dest = n;
+  par[source] = -1;
   d[source] = 0;
-  int x;
-  forn (i, n) {
-    x = -1;
-    for (Edge e : edges)
-      if (d[e.a] < oo)
-        if (d[e.b] > d[e.a] + e.cost) {
-          d[e.b] = max(-oo, d[e.a] + e.cost);
-          p[e.b] = e.a;
-          x = e.b;
-        }
-  }
-  if (x == -1){
-    //no hay ciclo negativo desde source
-  }else {
-    int y = x;
-    forn (i, n)
-      y = p[y];
-    vi path;
-    for (int cur = y;; cur = p[cur]) {
-      path.pb(cur);
-      if (cur == y && path.size() > 1)
-        break;
+  forn (i, n - 1){
+    for (auto [a, b, w] : edges){
+      if (dis[a] < oo){
+        dis[b] = min(dis[b], dis[a] + w);
+        par[b] = a;
+      }
     }
-    reverse(all(path));
-    cout << "Negative cycle: ";
-    for (int u : path)
-      cout << u << ' ';
   }
-  
+  if (dis[dest] == oo){
+    //no path
+  }else{
+    vi path;
+    for (int cur = dest; cur != -1; cur = par[cur])
+      path.pb(cur);
+    reverse(all(path));
+  }
