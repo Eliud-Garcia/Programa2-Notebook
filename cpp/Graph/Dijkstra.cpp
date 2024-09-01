@@ -1,36 +1,34 @@
-const ll oo = LLONG_MAX;
-struct edge {
-  int v;
+
+struct edge{
+  int u;
   ll w;
-  edge(int node, ll weight): v(node), w(weight) {}
-  bool operator<(const edge& x) const {
+  bool operator < (const edge &x) const {
     return x.w < w;
   }
 };
-const int MAXN = 2e5 + 5;
-vector<edge> g[MAXN];
-vi par;
-vb vis;
+
 int n, m;
+const int MAXN = 2e5 + 5;
+const ll oo = (1LL << 62);
+vector<edge> g[MAXN];
+vi par(MAXN);
 
 vll dijkstra(int s) {
   priority_queue<edge> pq;
-  vll dis(n + 5, oo);
-  pq.push(edge(s, 0));
+  vll dis(n + 1, oo);
+  pq.push(edge{s, 0});
   dis[s] = 0;
   par[s] = -1;
-  while (!pq.empty()) {
-    edge x = pq.top();
+  while (sz(pq)) {
+    auto [u, cur_dis] = pq.top();
     pq.pop();
-    int u = x.v;
-    vis[u] = true;
-    for (edge next : g[u]) {
-      int v = next.v;
-      ll  w = next.w;
-      if (!vis[v] && dis[u] + w < dis[v]) {
+    ll min_dis = dis[u];
+    if(cur_dis != min_dis) continue;
+    for (auto [v, w] : g[u]) {
+      if (dis[u] + w < dis[v]) {
         dis[v] = dis[u] + w;
         par[v] = u;
-        pq.push(edge(v, dis[v]));
+        pq.push(edge{v, dis[v]});
       }
     }
   }
@@ -39,20 +37,17 @@ vll dijkstra(int s) {
 
 int main() {
   cin >> n >> m;
-  par = vi(n + 5, -1);
-  vis = vb(n + 5, 0);
-  int a, b;
-  ll w;
-  forn (i, m) {
+  forn(i, m){
+    int a, b, w;
     cin >> a >> b >> w;
-    g[a].pb(edge(b, w));
-    g[b].pb(edge(a, w));
+    g[a].pb({b, w});
+    g[b].pb({a, w});
   }
-  dijkstra(1);
-  if (vis[n]) {
+  vll dis = dijkstra(1);
+  if(dis[n] != oo){
     vi path;
-    for (b = n; b != -1; b = par[b]) {
-      path.pb(b);
+    for (int i = n; i != -1; i = par[i]) {
+      path.pb(i);
     }
     rforn (i, sz(path)) {
       cout << path[i] << " ";
