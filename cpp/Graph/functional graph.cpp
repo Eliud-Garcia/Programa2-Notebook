@@ -42,6 +42,9 @@ void dfs(int u, stack<int> &st) {
       }
     }
   }
+  //if id is incorret
+  //iterate over childs
+  //and propagate ids
 }
 
 int main() {
