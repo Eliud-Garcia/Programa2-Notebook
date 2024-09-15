@@ -1,114 +1,115 @@
-#include <bits/stdc++.h>
-using namespace std;
 
-#define ln '\n'
-#define all(x) x.begin(), x.end()
-#define forn(i, n) for(int i = 0; i < n; i++)
-#define forab(i, a, b) for (int i = a; i < b; i++)
-#define pb push_back
-#define sz(x) int(x.size())
-#define rforn(i, n) for (int i = n-1; i >= 0; --i)
-#define form(i, n, m, x) for (int i = n; i < m; i += x)
-#define rform(i, n, m, x) for (int i = n; i >= m; i -= x)
+int n, m;
+const int MAXN = 3e5 + 5;
+const int LOG = 21; //calcular
 
-#ifdef LOCAL
-#include "debug.h"
-#else
-#define dbg(...)
-#endif
-
-typedef long long ll;
-typedef vector<int> vi;
-typedef vector<bool> vb;
-typedef vector<ll> vll;
-
-int n, q, LOG;
-const int MAXN = 5e5 + 5;
 vi g[MAXN];
-vi deep(MAXN);
-vector<vi> up;
-int cnt = 1;
+int tin[MAXN];
+int tout[MAXN];
+int deep[MAXN];
+
+int timer = 1;
+int up[MAXN][LOG];
+int max_up[MAXN][LOG];
+
+map<pair<int, int>, int> weights;
+
 void dfs(int u, int p) {
-  for(int v : g[u]) {
-    if(v!=p) {
-      deep[v] = deep[u] + 1;
-      up[0][v] = u;
+  tin[u] = timer++;
+  deep[u] = deep[p] + 1;
+
+  // initialize binary lifting arrays
+  up[u][0] = p;
+  max_up[u][0] = weights[ {p, u}];
+
+  for (int v : g[u]) {
+    if (v != p) {
       dfs(v, u);
     }
   }
+  tout[u] = timer - 1;
 }
-void build(int n, int root) {
+
+bool is_ancestor(int x, int y) {
+  return tin[x] <= tin[y] && tout[y] <= tout[x];
+}
+
+int lca(int x, int y) {
+  if (is_ancestor(x, y))  return x;
+
+  for (int i = LOG - 1; i >= 0; i--) {
+    if (!is_ancestor(up[x][i], y)) {
+      x = up[x][i];
+    }
+  }
+  return up[x][0];
+}
+
+void build(int root) {
   dfs(root, root);
-  forab(i, 1, LOG + 1) { //logs
-    forab (u, 1, n) {//nodo
-      if (up[i - 1][u] != -1) {
-        up[i][u] = up[i - 1][up[i - 1][u]];
-      }
+  forab(k, 1, LOG) {
+    forab(u, 1, n + 1) {
+      up[u][k] = up[up[u][k - 1]][k - 1];
+      // take max of weights from left and right
+      max_up[u][k] = max(max_up[u][k - 1], max_up[up[u][k - 1]][k - 1]);
     }
   }
 }
-int lca(int u, int v) {
-  if (deep[u] > deep[v]) {
-    int tmp = u;
-    u = v;
-    v = tmp;
-  }
-  int diff = deep[v] - deep[u];
-  rform (i, LOG - 1, 0, 1) {
-    if((diff & (1 << i))) {
-      v = up[i][v];
+//get max weight edge from (u, lcaU)
+int get_max_up(int u, int v) {
+  if(deep[u] < deep[v]) swap(u, v);
+  int df = abs(deep[v] - deep[u]);
+  int res = 0;
+  forn(i, LOG) {
+    if(df & (1 << i)) {
+      //up the lowest node
+      res = max(res, max_up[u][i]);
+      u = up[u][i];
     }
   }
-  if (u == v) return u;
-  rform (i, LOG - 1, 0, 1) {
-    if (up[i][v] != up[i][u]) {
-      u = up[i][u];
-      v = up[i][v];
-    }
-  }
-  return up[0][u];
+  return res;
+}
+
+bool cmp(array<int, 4> &a, array<int, 4> &b) {
+  return a[2] < b[2];
 }
 
 int main() {
-  cin >> n;
-  LOG = int(log2(n + 1) + 1);
-  up = vector<vi>(LOG + 1, vi(n + 1));
-  int a, b, c;
-  forn (i, n - 1) {
-    cin >> a >> b;
-    g[a].pb(b);
-    g[b].pb(a);
+  cin >> n >> m;
+  vector<array<int, 4>> edges(m);
+  forn(i, m) {
+    int a, b, w;
+    cin >> a >> b >> w;
+    edges[i] = {a, b, w, i};
+    weights[ {a, b}] = w;
+    weights[ {b, a}] = w;
   }
-  int root = 1;
-  build(n + 1, root);
-  cin >> q;
-  while (q--) {
-    cin >> a >> b >> c;
-    int ancestor = lca(a, b);
-    int disAB = deep[a] + deep[b] - (2 * deep[ancestor]);
-    int disA_lca = deep[a] - deep[ancestor];
-    if (disAB <= c) {
-      cout << b << ln;
-    } else {
-      if (disA_lca >= c) {
-        //nos acercamos dando brincos
-        //en potencias de 2
-        rform (k, LOG, 0, 1) {
-          if (((c >> k) & 1)) {
-            a = up[k][a];
-          }
-        }
-        cout << a << ln;
-      } else {
-        int df = disAB - c;
-        rform (k, LOG, 0, 1) {
-          if (((df >> k) & 1)) {
-            b = up[k][b];
-          }
-        }
-        cout << b << ln;
-      }
+
+  //Kruskal
+  sort(all(edges), cmp);
+  UnionFind uf(n + 1);
+  ll mst = 0;
+  for(auto [a, b, w, id]: edges) {
+    if(!uf.isSame(a, b)) {
+      uf.unite(a, b);
+      mst += w;
+      g[a].pb(b);
+      g[b].pb(a);
     }
   }
+
+  build(1);
+  vll ans(m);
+
+  for(auto [a, b, w, id]: edges) {
+    int LCA = lca(a, b);
+    int mx_a = get_max_up(a, LCA);
+    int mx_b = get_max_up(b, LCA);
+
+    ll res = mst - max(mx_a, mx_b) + w;
+    ans[id] = res;
+  }
+
+  forn(i, m) cout << ans[i] << ln;
   return 0;
 }
