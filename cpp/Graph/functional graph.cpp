@@ -1,69 +1,54 @@
 
-//choose min cost in cycle
+
 const int MAXN = 2e5 + 5;
-int n;
-vi g[MAXN];
+vi rg[MAXN]; // reverse graph
+vll valor(MAXN);
 vb vis(MAXN, 0);
-vb in_cycle(MAXN, 0);
-vi id(MAXN, -1);
-int cost[MAXN];
-int mo[MAXN];
+vi p(MAXN); //parent
+vi in_cycle(MAXN, 0);
 
-int mn = 2e9;
-int tag = 1;
-
-void dfs(int u, stack<int> &st) {
+void mark(int u){
+  if(vis[u]) return;
   vis[u] = 1;
-  id[u] = tag;
-  st.push(u);
-  for(int v: g[u]) {
-    if(!vis[v]) {
-      dfs(v, st);
-    } else {
-      if(id[u] == id[v]) {
-        while(sz(st)) {
-          int node = st.top();
-          st.pop();
-          mn = min(mn, cost[node]);
-          //cout << node << ln;
-          in_cycle[node] = 1;
-          if(node == v) {
-            break;
-          }
-        }
-      } else {
-        if(id[u] != id[v] && !in_cycle[u] && in_cycle[v]) {
-          id[u] = id[v];
-          mn = 0;
-        } else if(id[u] != id[v] && !in_cycle[u] && !in_cycle[v]) {
-          id[u] = id[v];
-          mn = 0;
-        }
-      }
-    }
+  for(int v: rg[u]){
+    mark(v);
   }
-  //if id is incorret
-  //iterate over childs
-  //and propagate ids
+}
+
+int cycle(int u){
+  int x = p[u];
+  int y = p[p[u]];
+  while(x != y){
+    x = p[x];
+    y = p[p[y]];
+  }
+  //traverse the cycle
+  ll min_cycle = valor[x];
+  x = p[x];
+  while(x != y){
+    in_cycle[x] = 1;
+    min_cycle = min(min_cycle, valor[x]);
+    x = p[x];
+  }
+  mark(x);
+  return min_cycle;
 }
 
 int main() {
-  cin >> n;
-  forab(i, 1, n + 1) {
-    cin >> cost[i];
+  int n; cin >> n;
+  forab(i, 1, n + 1){
+    cin >> valor[i];
   }
-  forab(i, 1, n + 1) {
-    cin >> mo[i];
-    g[i].pb(mo[i]);
+
+  forab(i, 1, n + 1){
+    cin >> p[i];
+    rg[p[i]].pb(i);
   }
-  int ans = 0;
-  forab(i, 1, n + 1) {
-    if(!vis[i]) {
-      mn = 2e9;
-      stack<int> st;
-      dfs(i, st);
-      tag++;
-      ans += mn;
+
+  ll ans = 0;
+  forab(i, 1, n + 1){
+    if(!vis[i]){
+      ans += cycle(i);
     }
   }
   cout << ans << ln;
