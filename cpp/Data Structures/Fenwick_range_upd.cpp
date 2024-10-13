@@ -10,9 +10,9 @@ struct ft_range {
     ft2.assign(n + 1, 0);
   }
 
-  ft_range(vector<T> &a) : ft1(sz(a) + 1), ft2(sz(a) + 1){
+  ft_range(vector<T> &a) : ft1(sz(a) + 1), ft2(sz(a) + 1) {
     forab(i, 1, sz(a) + 1)
-      update(i, i, a[i]);
+    update(i, i, a[i]);
   }
 
   T query(vector<T> & ft, int i) {
@@ -39,24 +39,25 @@ struct ft_range {
 };
 
 int main() {
-  int n; cin >> n;
+  int n;
+  cin >> n;
   vector<int> v(n + 1);
   forab(i, 1, n + 1) cin >> v[i];
   ft_range<int> bit(v);
-	int q;
-	cin >> q;
-	int l, r, val;
-	while(q--){
+  int q;
+  cin >> q;
+  int l, r, val;
+  while(q--) {
     char op;
-		cin >> op;
-		if(op == 'q'){
-			cin >> l >> r;
-			cout << bit.query(l, r) << ln;
-		}else{
-			cin >> l >> r >> val;
-			bit.update(l, r, val);
-		}
-	}
+    cin >> op;
+    if(op == 'q') {
+      cin >> l >> r;
+      cout << bit.query(l, r) << ln;
+    } else {
+      cin >> l >> r >> val;
+      bit.update(l, r, val);
+    }
+  }
   return 0;
 }
 
