@@ -62,16 +62,17 @@ int main() {
 //validar si una arista
 //esta en el camino mas corto
 //desde (a, b)
-vll da = dijkstra(a);
-ll minDis = da[b];
-vll db = dijkstra(b);
-for (edge e : aristas) {
-  //edge is on shortest path
-  if(disSource[e.u] + e.w + disDest[e.v] == minDis) {
-    continue;
+vll da = dijkstra(1);
+ll minDis = da[n];
+vll db = dijkstra(n);
+vector<ll> shortes_path;
+for (auto [u, v, w] : edges) {
+  if(da[u] + w + db[v] == minDis) {
+      //edge is on shortest path
+      //do something
   }
-  //edge is on shortest path
-  if(disSource[e.v] + e.w + disDest[e.u] == minDis) {
-    continue;
+  if(da[v] + w + db[u] == minDis) {
+      //edge is on shortest path
+      //do something
   }
 }

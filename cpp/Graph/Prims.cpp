@@ -6,7 +6,7 @@ struct edge {
    int idx;
 
    bool operator < (const edge &x) const {
-      return w > x.w; //min
+      return w > x.w;
    }
 };
 
@@ -22,28 +22,28 @@ vector<vector<edge>> prims(int src){
    vb vis(n + 1, 0);
    vis[src] = 1;
 
-   for (auto &[v, w, id] : g[src]) {
-      if (!vis[v]){
-         pq.push(edge{v, w, id});
+   for (edge &i: g[src]) {
+      if (!vis[i.v]){
+         pq.push(i);
       }
    }
 
    ll mst = 0;
    while (sz(pq)) {
-      auto [u, w, id] = pq.top();
+      edge u = pq.top();
       pq.pop();
 
-      if (!vis[u]) {
-         vis[u] = true;
-         mst += w;
-         //arista de mst
-         auto [uu, vv, ww, _] = edges[id];
-         tree[uu].pb({vv, ww});
-         tree[vv].pb({uu, ww});
+      if (!vis[u.v]) {
+         //arista del MST
+         auto [uu, vv, ww, id] = edges[u.idx];
+         tree[uu].pb(edge{vv, ww, id});
+         tree[vv].pb(edge{uu, ww, id});
+         mst += ww;
+         vis[u.v] = 1;
 
-         for (auto &[v, w, idx] : g[u]) {
-            if (!vis[v]) {
-               pq.push(edge{v, w, idx});
+         for (edge &v : g[u.v]) {
+            if (!vis[v.v]) {
+               pq.push(v);
             }
          }
       }
