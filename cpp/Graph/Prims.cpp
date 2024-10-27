@@ -35,7 +35,6 @@ vector<vector<edge>> prims(int src){
 
       if (!vis[u]) {
          vis[u] = true;
-         dbg(id + 1);
          mst += w;
          //arista de mst
          auto [uu, vv, ww, _] = edges[id];
