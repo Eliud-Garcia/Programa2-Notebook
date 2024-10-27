@@ -38,8 +38,8 @@ vector<vector<edge>> prims(int src){
          mst += w;
          //arista de mst
          auto [uu, vv, ww, _] = edges[id];
-         tree[uu].pb({uu, ww});
-         tree[vv].pb({vv, ww});
+         tree[uu].pb({vv, ww});
+         tree[vv].pb({uu, ww});
 
          for (auto &[v, w, idx] : g[u]) {
             if (!vis[v]) {
