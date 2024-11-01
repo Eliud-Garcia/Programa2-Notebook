@@ -54,3 +54,11 @@ int main() {
   cout << ans << ln;
   return 0;
 }
+
+//When we are swapping 2
+//elements that belong to one cycle, 
+//we are splitting our cycle into 2
+//parts.
+
+//min swaps(a[i], a[a[i]]) to sort
+//the permutation = n - #cycles
