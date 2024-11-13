@@ -70,3 +70,16 @@ struct mbm { // O(E * sqrt(V))
     return ans;
   }
 };
+
+/*Maximum Independent Set: 
+Subset of nodes 
+with the following propriety: 
+For any two nodes u, v 
+are not adjacent 
+(There is no direct edge between nodes  u and  v).
+*/
+
+/*Minimum Vertex Cover: 
+A vertex cover is a subset of the nodes 
+that together touch all the edges.
+*/
