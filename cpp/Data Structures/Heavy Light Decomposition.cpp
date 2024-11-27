@@ -1,4 +1,5 @@
 
+//segtree sobre el valor de los nodos
 const int N = 2e5 + 5;
 const int D = 19;
 const int S = (1 << D);
