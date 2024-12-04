@@ -91,3 +91,26 @@ struct Dinic { // O(V^2 * E)
 //int nodos = n + 5;
 //Dinic dd(nodos, nodos - 2, nodos - 1);
 
+
+/* Max Independent Paths (vertex-disjoint)
+  Two paths from S to T are independent if they
+  do not share any vertex apart  from S and T.
+
+  Construc the network flow, each edge with 1 capacity,
+  and each node with 1 capacity (each node can only be used once),
+  then run a max flow algo.
+*/
+
+/*
+  Max Edge-disjoint Paths
+  Two paths from S to T are edge-disjoint
+  if they do not share any edge 
+  (but they can share nodes).
+
+  this is equivalent to find the (vertex-disjoint)
+  but we do not have vertex capacity
+*/
+
+
+
+
