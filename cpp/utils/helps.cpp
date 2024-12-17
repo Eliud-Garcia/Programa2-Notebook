@@ -5,7 +5,6 @@ bool cmp(pii &a, pii &b) {
   if(a.second == b.second) return a.first < b.first;
   return a.second > b.second;
 }
-
 //for set
 set<pii, decltype(&cmp)> q(&cmp);
 
@@ -22,6 +21,10 @@ getline(cin, x);//lee linea completa
 
 //imprime long double con 6 decimales
 printf("%.6LF\n", value);//long double
+
+//impimir string con printf
+string aux = "texto";
+printf("%s\n", aux.c_str());
 
 
 

@@ -83,3 +83,8 @@ are not adjacent
 A vertex cover is a subset of the nodes 
 that together touch all the edges.
 */
+
+// Min Vertex Cover: vertices de L con level[v]==-1 y vertices de R con level[v]>0
+// Max Independent Set: vertices NO tomados por el Min Vertex Cover
+
+//Max Independet Set = |V| - size of the MCBM

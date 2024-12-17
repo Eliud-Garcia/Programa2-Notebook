@@ -1,6 +1,5 @@
 
-// Min Vertex Cover: vertices de L con level[v]==-1 y vertices de R con level[v]>0
-// Max Independent Set: vertices NO tomados por el Min Vertex Cover
+
 typedef pair<int, int> ii;
 
 struct FlowEdge {
