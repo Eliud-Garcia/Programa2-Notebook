@@ -88,3 +88,8 @@ that together touch all the edges.
 // Max Independent Set: vertices NO tomados por el Min Vertex Cover
 
 //Max Independet Set = |V| - size of the MCBM
+
+/*Min Path Cover (only in DAG)
+ Find the minimum number of paths to cover 
+ each vertex on a graph
+ */
