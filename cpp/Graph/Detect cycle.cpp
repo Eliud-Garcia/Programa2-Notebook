@@ -61,44 +61,47 @@ int main() {
 }
 
 //undirected graph
-const int MAXN = 1e5 + 5;
+const int MAXN = 2e5 + 5;
+int color[MAXN];
+int mark[MAXN];
+int par[MAXN];
 vi g[MAXN];
-vb vis;
-vi parent;
-int n, m;
-int cycle_start = -1;
-int cycle_end = -1;
 
-bool dfs(int node, int par) {
-  vis[node] = 1;
-  parent[node] = par;
-  for(int next: g[node]) {
-    if(next == par) continue;
-    if(vis[next]) {
-      cycle_start = next;
-      cycle_end = node;
-      return 1;
+void dfs(int u, int p, int &cy){
+    if(color[u] == 2){
+        return;
     }
-    if(!vis[next] && dfs(next, node)) return 1;
-  }
-  return false;
+    if(color[u] == 1){
+        cy++;
+        int cur = p;
+        mark[cur] = cy;
+        while(cur != u){
+            cur = par[cur];
+            mark[cur] = cy;
+        }
+        return;
+    }
+    par[u] = p;
+    color[u] = 1;
+    for(int v: g[u]){
+        if(v == par[u]) continue;
+        dfs(v, u, cy);
+    }
+    color[u] = 2;
 }
-int main() {
-  cin >> n >> m;
-  vis = vb(n + 1, 0);
-  parent = vi(n + 1);
-  forn(i, m) {
-    int a, b;
-    cin >> a >> b;
-    g[a].pb(b);
-    g[b].pb(a);
-  }
-  forab(i, 1, n + 1) {
-    if(!vis[i] && dfs(i, -1)) break;
-  }
-  if(cycle_start == -1) //no hay ciclo
-    else //hay ciclo
-      //se puede recorrer el ciclo
-      //usando el array de padres
-      return 0;
-}
+
+/*
+    forab(i, 1, n + 1){
+        color[i] = 0;
+        par[i] = i;
+        mark[i] = -1;
+    }
+    int cycles = 0;
+    dfs(1, 1, cycles);
+
+    forab(i, 1, n + 1){
+        if(mark[i] != -1){
+            found = true;
+        }
+    }
+*/
