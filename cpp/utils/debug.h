@@ -1,26 +1,25 @@
-#include<iostream>
+#include<bits/stdc++.h>
+
 using namespace std;
-void __print(int x) {cout << x;}
-void __print(long x) {cout << x;}
-void __print(long long x) {cout << x;}
-void __print(unsigned x) {cout << x;}
-void __print(unsigned long x) {cout << x;}
-void __print(unsigned long long x) {cout << x;}
-void __print(float x) {cout << x;}
-void __print(double x) {cout << x;}
-void __print(long double x) {cout << x;}
-void __print(char x) {cout << '\'' << x << '\'';}
-void __print(const char *x) {cout << '\"' << x << '\"';}
-void __print(const string &x) {cout << '\"' << x << '\"';}
-void __print(bool x) {cout << (x ? "true" : "false");}
- 
-template<typename T, typename V>
-void __print(const pair<T, V> &x) {cout << '{'; __print(x.first); cout << ','; __print(x.second); cout << '}';}
-template<typename T>
-void __print(const T &x) {int f = 0; cout << '{'; for (auto &i: x) cout << (f++ ? "," : ""), __print(i); cout << "}";}
-void _print() {cout << "]\n"<<endl;}
-template <typename T, typename... V>
-void _print(T t, V... v) {__print(t); if (sizeof...(v)) cout << ", "; _print(v...);}
-#define dbg(x...) cout << #x << " = ["; _print(x)
-template<typename T,typename T1>T amax(T &a,T1 b){if(b>a)a=b;return a;}
-template<typename T,typename T1>T amin(T &a,T1 b){if(b<a)a=b;return a;}
+
+string __print(string s);
+string __print(char c);
+string __print(int a);
+string __print(long a);
+string __print(long long a);
+string __print(float a);
+string __print(double a);
+string __print(long double a);
+template<typename A, typename B> string __print(pair<A, B> p);
+template<typename T, size_t Z> string __print(array<T, Z> a);
+template<typename T> string __print(vector<T> v);
+template<typename T> string __print(stack<T> s);
+template<typename T> string __print(queue<T> q);
+template<typename T> string __print(priority_queue<T> p);
+template<typename T> string __print(priority_queue<T, vector<T>, greater<T>> p);
+template<typename T> string __print(deque<T> v);
+template<typename T> string __print(set<T> v);
+template<typename T> string __print(multiset<T> v);
+template<typename T> string __print(unordered_set<T> v);
+template<typename F, typename S> string __print(map<F, S> v);
+template<typename F, typename S> string __print(multimap<F, S> v);
