@@ -35,8 +35,10 @@ void dfs(int u, int p){
     if(big != -1){
         dfs(big, u);
         swap(st[u], st[big]);
+        //ahora u tiene el set mas grande
     }
 
+    //small to large
     for(int v: g[u]){
         if(v == p || v == big) continue;
         for(auto [c, occ] : st[v]){
@@ -44,7 +46,8 @@ void dfs(int u, int p){
         }
     }
 
-    st[u][a[u]]++;
+    st[u][a[u]]++;//incluir u
+    //ans queries
     for(auto [c, idx]: queries[u]){
         ans[idx] = st[u].count(c) ? st[u][c] : 0;
     }
