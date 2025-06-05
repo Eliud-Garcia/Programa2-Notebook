@@ -1,64 +1,42 @@
 
 //directed graph
-int n, m;
-const int MAXN = 1e5 + 5;
+const int MAXN = 2e5 + 5;
 vi g[MAXN];
-vi par(MAXN, -1);
-vi color(MAXN, 0);
-int inicio = -1, fin = -1;
-vi cycle;
+int color[MAXN];
+int in_cycle[MAXN];
+int par[MAXN];
 
-bool dfs(int u){
-  color[u] = 1;
-  for(int v: g[u]){
-    if(color[v] == 0){
-      par[v] = u;
-      if(dfs(v)) return 1;
-    }else if(color[v] == 1){
-      if(inicio != -1 && fin != -1) return 1;
-      inicio = u;
-      fin = v;
-      vi aux;
-      int cur = u;
-      aux.pb(cur);
-      while(cur != v){
-        cur = par[cur];
-        aux.pb(cur);
-      }
-      aux.pb(u);
-      if(sz(aux) >= 2){
-        reverse(all(aux));
-        cycle = aux;
-      }
-      return 1;
+void dfs(int u){
+    if(color[u] == 2) return;
+    color[u] = 1;
+    for(int v: g[u]){
+        if(color[v] == 0){
+            par[v] = u;
+            dfs(v);
+        }else if(color[v] == 1){
+            //traverse the cycle
+            int ini = u, fin = v;
+            int cur = u;
+            in_cycle[cur] = 1;
+            while(cur != v){
+                cur = par[cur];
+                in_cycle[cur] = 1;
+            }
+            in_cycle[v] = 1;
+        }
     }
-  }
-  color[u] = 2;
-  return 0;
+    color[u] = 2;
 }
 
-int main() {
-  cin >> n >> m;
-  int a, b;
-  forn(i, m){
-    cin >> a >> b;
-    g[a].pb(b);
-  }
-  forab(i, 1, n + 1){
-    if(color[i] == 0 && dfs(i))break;
-    if(sz(cycle) > 0) break;
-  }
-  if(sz(cycle) == 0){
-    puts("IMPOSSIBLE");
-  }else{
-    printf("%d\n", sz(cycle));
-    for(int i : cycle){
-      printf("%d ", i);
+/*
+    forab(i, 1, n + 1) {
+        in_cycle[i] = 0;
+        color[i] = 0;
     }
-    puts("");
-  }
-  return 0;
-}
+    forab(i, 1, n + 1) {
+        if(color[i] == 0) dfs(i);
+    }
+*/
 
 //undirected graph
 const int MAXN = 2e5 + 5;
