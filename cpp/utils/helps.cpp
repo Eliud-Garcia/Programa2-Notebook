@@ -27,4 +27,9 @@ string aux = "texto";
 printf("%s\n", aux.c_str());
 
 
+//compresion de coordenadas
+sort(all(ax));
+ax.erase(unique(all(ax)), ax.end());
+
+
 

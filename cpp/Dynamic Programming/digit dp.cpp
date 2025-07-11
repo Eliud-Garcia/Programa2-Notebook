@@ -41,3 +41,14 @@ int main() {
     }
     return 0;
 }
+
+
+/*
+    check leading zeroes
+    add other state [2]
+
+    if(!zeroes && (d == prev)) continue;
+    zeroes && (d==0)
+    
+
+*/
