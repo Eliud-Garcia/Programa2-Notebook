@@ -110,6 +110,10 @@ struct Dinic { // O(V^2 * E)
   but we do not have vertex capacity
 */
 
+// Min Vertex Cover: vertices de L con level[v]==-1 y vertices de R con level[v]>0
+// Max Independent Set: vertices NO tomados por el Min Vertex Cover
+
+
 
 
 

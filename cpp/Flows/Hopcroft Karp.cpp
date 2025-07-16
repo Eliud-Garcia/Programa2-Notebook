@@ -1,77 +1,88 @@
 
-using ii = pair<int, int>;
+struct mbm {// O(E * sqrt(V))
+    int n, m; //left and right sz
+    vi mat, inv, d;
+    vector<vi> g;
+    vb cover[2];
 
-struct mbm { // O(E * sqrt(V))
-    int nl, nr, flow = 0;
-    vector<vector<int>> g;
-    vector<int> dist, mfl, mfr;
+    mbm(int nl, int nr) : n(nl), m(nr) {
+        mat = vi(n, -1);
+        inv = vi(m, -1);
 
-    mbm(int nl, int nr):
-        nl(nl), nr(nr), g(nl), mfl(nl, -1),
-        mfr(nr, -1), dist(nl) {}
+        d = vi(n);
+        g = vector<vi>(n);
 
+        //mvc
+        cover[0].assign(n, true);
+        cover[1].assign(m, false);
+    }
+    //u->[0, n)  v->[0, m)
     void add(int u, int v) {
-        g[u].push_back(v);
+        g[u].pb(v);
     }
 
-    void bfs() {
+    bool bfs() {
+        bool aug = false;
         queue<int> q;
-        forn (u, nl)
-        if (!~mfl[u]) q.push(u), dist[u] = 0;
-        else dist[u] = -1;
-        while (sz(q)) {
+        forab(u, 0,n) if (mat[u] < 0) q.push(u);
+        else d[u] = -1;
+        while (!q.empty()) {
             int u = q.front();
             q.pop();
-            for (auto &v : g[u])
-                if (~mfr[v] && !~dist[mfr[v]]) {
-                    dist[mfr[v]] = dist[u] + 1;
-                    q.push(mfr[v]);
-                }
+            for (auto v : g[u]) {
+                if (inv[v] < 0) aug = true;
+                else if (d[inv[v]] < 0) d[inv[v]] = d[u] + 1, q.push(inv[v]);
+            }
         }
+        return aug;
     }
 
     bool dfs(int u) {
-        for (auto &v : g[u])
-            if (!~mfr[v]) {
-                mfl[u] = v, mfr[v] = u;
+        for (auto v : g[u]) if (inv[v] < 0) {
+                mat[u] = v, inv[v] = u;
                 return true;
             }
-        for (auto &v : g[u])
-            if (dist[mfr[v]] == dist[u] + 1 && dfs(mfr[v])) {
-                mfl[u] = v, mfr[v] = u;
+        for (auto v : g[u]) if (d[inv[v]] > d[u] && dfs(inv[v])) {
+                mat[u] = v, inv[v] = u;
                 return true;
             }
+        d[u] = 0;
         return false;
     }
 
-    int get_matching() {
-        while (true) {
-            bfs();
-            int agt = 0;
-            forn (u, nl)
-            if (!~mfl[u]) agt += dfs(u);
-            if (!agt) break;
-            flow += agt;
-        }
-        return flow;
+    int go() {
+        int ans = 0;
+        while (bfs()) forab(u,0,n) if (mat[u] < 0) ans += dfs(u);
+        return ans;
     }
-
-    pair<vector<int>, vector<int>> MVC() {
-        vector<int> L, R;
-        forn (u, nl)
-        if (!~dist[u]) L.push_back(u);
-        else if (~mfl[u]) R.push_back(mfl[u]);
+    void dfs2(int u) {
+        cover[0][u] = false;
+        for (auto v : g[u]) if (!cover[1][v]) {
+                cover[1][v] = true;
+                dfs2(inv[v]);
+            }
+    }
+    pair<vi, vi> mvc() {
+        int mf = go();
+        forab(u, 0,n) if (mat[u] < 0) dfs2(u);
+        vi L, R;
+        forab(i, 0, n) if (cover[0][i]) L.pb(i);
+        forab(i, 0, m) if (cover[1][i]) R.pb(i);
+        assert(mf == sz(L) + sz(R));
         return {L, R};
     }
 
-    vector<ii> get_edges() {
-        vector<ii> ans;
-        forn (u, nl)
-        if (mfl[u] != -1)
-            ans.pb({u, mfl[u]});
-        return ans;
-    }
 };
+
+int main() {
+    //get matching
+    forab(u, 0, n) {
+        if(dd.mat[u] != -1) {
+            cout << u + 1 << " " << dd.mat[u] + 1 << ln;
+        }
+    }
+    return 0;
+}
 
 /*Maximum Independent Set:
 Subset of nodes
@@ -85,9 +96,6 @@ are not adjacent
 A vertex cover is a subset of the nodes
 that together touch all the edges.
 */
-
-// Min Vertex Cover: vertices de L con level[v]==-1 y vertices de R con level[v]>0
-// Max Independent Set: vertices NO tomados por el Min Vertex Cover
 
 //Max Independet Set = |V| - size of the MCBM
 
