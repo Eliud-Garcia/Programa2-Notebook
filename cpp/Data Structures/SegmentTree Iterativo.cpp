@@ -1,30 +1,60 @@
+
+
+// [1, n]
 template<typename T>
 struct STree {
-    vector<T> st;
+    vector<T> tree;
     int n;
-    T neutro = T(1e9);
+    T neutro = T(0);
 
     T oper(T a, T b) {
-        return min(a, b);
+        return a + b;
     }
 
     STree(vector<T> &a) {
-        n = sz(a);
-        st.resize(n * 2);
-        forn (i, n) st[n + i] = a[i];
-        rform (i, n - 1, 1, 1) st[i] = oper(st[i << 1], st[i << 1 | 1]);
+        int tam = 1;
+        while(1LL << (tam) < sz(a)) tam++;
+        n = 1LL << tam;
+        tree.resize(n * 2);
+        forab(i, 1, sz(a) + 1) upd(i, a[i - 1]);
     }
 
-    void upd(int p, T val) {
-        for (st[p += n] = val; p > 1; p >>= 1) st[p >> 1] = oper(st[p], st[p ^ 1]);
-    }
-
-    T query(int l, int r) { //[l, r)
-        T v = neutro;
-        for (l += n, r += n; l < r; l >>= 1, r >>= 1) {
-            if (l & 1) v = oper(v, st[l++]);
-            if (r & 1) v = oper(v, st[--r]);
+    void upd(int i, T x) {
+        i += n;
+        tree[i] = x;
+        while (i > 1) {
+            i /= 2;
+            // The index of the left child is s * 2.
+            // The index of the right child is s * 2 + 1.
+            tree[i] = oper(tree[i * 2], tree[i * 2 + 1]);
         }
-        return v;
+    }
+
+    T qry(int l, int r) {
+        T res = 0;
+        l += n;
+        r += n;
+        while (l <= r) {
+            if (l % 2 == 1) res = oper(res, tree[l++]);
+            if (r % 2 == 0) res = oper(res, tree[r--]);
+            l /= 2;
+            r /= 2;
+        }
+        return res;
+    }
+
+    //lower bound in the prefix sum
+    int lb(T k) {
+        int s = 1;
+        while (s < n) {
+            if (tree[s * 2] >= k) {
+                s = s * 2;
+            } else {
+                k -= tree[s * 2];
+                s = s * 2 + 1;
+            }
+        }
+
+        return s - n;
     }
 };
