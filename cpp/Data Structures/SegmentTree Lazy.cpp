@@ -1,5 +1,9 @@
 template<typename T>
 struct STree {
+    #define L(v) v << 1
+    #define R(v) v << 1 | 1
+    //L(v) = 2 * v
+    //R(v) = 2 * v + 1
     int n;
     vector<T> st, lazy;
     T neutro = T(0);
@@ -27,17 +31,17 @@ struct STree {
             return;
         }
         int tm = (tl + tr) / 2;
-        build(v * 2, tl, tm, a);
-        build(v * 2 + 1, tm + 1, tr, a);
-        st[v] = oper(st[v * 2], st[v * 2 + 1]);
+        build(L(v), tl, tm, a);
+        build(R(v), tm + 1, tr, a);
+        st[v] = oper(st[L(v)], st[R(v)]);
     }
 
     void push(int v, int tl, int tr) {
         if (!lazy[v]) return;
         st[v] += (tr - tl + 1) * lazy[v];
         if (tl != tr) {
-            lazy[v * 2] += lazy[v];
-            lazy[v * 2 + 1] += lazy[v];
+            lazy[L(v)] += lazy[v];
+            lazy[R(v)] += lazy[v];
         }
         lazy[v] = 0;
     }
@@ -51,9 +55,9 @@ struct STree {
             return;
         }
         int tm = (tl + tr) / 2;
-        upd(v * 2, tl, tm, l, r, val);
-        upd(v * 2 + 1, tm + 1, tr, l, r, val);
-        st[v] = oper(st[v * 2], st[v * 2 + 1]);
+        upd(L(v), tl, tm, l, r, val);
+        upd(R(v), tm + 1, tr, l, r, val);
+        st[v] = oper(st[L(v)], st[R(v)]);
     }
 
     T query(int v, int tl, int tr, int l, int r) {
@@ -61,7 +65,7 @@ struct STree {
         if(tl > r || tr < l) return neutro;
         if (l <= tl && tr <= r) return st[v];
         int tm = (tl + tr) / 2;
-        return oper(query(v * 2, tl, tm, l, r), query(v * 2 + 1, tm + 1, tr, l, r));
+        return oper(query(L(v), tl, tm, l, r), query(R(v), tm + 1, tr, l, r));
     }
 
     void upd(int l, int r, T val) {
