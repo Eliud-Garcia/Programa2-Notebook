@@ -1,4 +1,5 @@
 
+// tomado de https://github.com/brunomaletta
 
 const int LOG = 17; //calcular
 const int MAXN = 2e5;

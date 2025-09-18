@@ -1,3 +1,6 @@
+
+//tomado de https://github.com/brunomaletta
+
 //Segtree lazy code here
 
 const int MAXN = 2e5  + 10;
