@@ -19,7 +19,7 @@ struct HLD {
         hp.resize(n); //heavy path
 
         build_hld(root);
-        st.build(1, 0, tam(st_val) - 1, st_val);
+        st.build(1, 0, sz(st_val) - 1, st_val);
 	}
 
     //save all values first in st_val and then build segtree
@@ -27,9 +27,11 @@ struct HLD {
 
 	void build_hld(int u, int p = -1, int f = 1) {
 		st_val[in[u] = timer++] = val[u];
-        //st.upd(pos[k], pos[k], val[k]); -----
+        //st.upd(in[k], in[k], val[k]);
 		tam[u] = 1;
-		for (auto& v : g[u]) if (v != p) {
+		//dont forget the &
+		//with edges use [v, w] and check pair(first, second)
+		for (auto &v : g[u]) if (v != p) {
 			par[v] = u;
 			hp[v] = (v == g[u][0] ? hp[u] : v);
 			build_hld(v, u, f);
@@ -49,7 +51,7 @@ struct HLD {
 		}
 		return st.query(in[hp[a]], in[a]) + query_path(par[hp[a]], b);
 	}
-    
+
 	void update_path(int a, int b, int x) {
         //if(a == b) return;
 		if (in[a] < in[b]) swap(a, b);
@@ -77,7 +79,7 @@ struct HLD {
 };
 
 /*
-If the value is on the edge, 
-the node that stores the value is the one at the greater depth, 
+If the value is on the edge,
+the node that stores the value is the one at the greater depth,
 and in queries and updates the higher one is excluded.
 */
