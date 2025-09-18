@@ -4,6 +4,7 @@ struct STree {
     #define R(v) v << 1 | 1
     //L(v) = 2 * v
     //R(v) = 2 * v + 1
+
     int n;
     vector<T> st, lazy;
     T neutro = T(0);
