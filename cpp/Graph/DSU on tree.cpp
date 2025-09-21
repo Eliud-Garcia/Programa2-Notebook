@@ -1,4 +1,6 @@
 
+
+// O(n log(n))
 int n, q;
 const int MAXN = 2e5 + 5;
 vi g[MAXN];
@@ -41,6 +43,8 @@ void dfs(int u, int p){
     //small to large
     for(int v: g[u]){
         if(v == p || v == big) continue;
+        //en caso de un merge mas complejo
+        //hacer una funcion merge(u, v)
         for(auto [c, occ] : st[v]){
             st[u][c] += occ;
         }
