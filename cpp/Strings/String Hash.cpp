@@ -1,20 +1,31 @@
 
+
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+
+const ll MOD = 991831889LL;
+
+//9982443539LL
+//1000000007LL
+//1000000009LL
+
+const ll C = uniform_int_distribution<ll>(0.1 * MOD, 0.9 * MOD)(rng);
+
 struct hash_str {
-    ll c, mod;
     vll h, p;
-    hash_str(const string &s, ll c, ll mod) : c(c), mod(mod), h(sz(s) + 1), p(sz(s) + 1) {
+    hash_str(const string &s) : h(sz(s) + 1), p(sz(s) + 1) {
         p[0] = 1;
         h[0] = 0;
         forn (i, sz(s)) {
-            h[i + 1] = (c * h[i] + s[i]) % mod;
-            p[i + 1] = (c * p[i]) % mod;
+            h[i + 1] = (C * h[i] + s[i]) % MOD;
+            p[i + 1] = (C * p[i]) % MOD;
         }
     }
     // Returns hash of interval s[a ... b] (where 0 <= a <= b < sz(s))
     ll get(int a, int b) {
-        return (h[b + 1] - ((h[a] * p[b - a + 1]) % mod) + mod) % mod;
+        return (h[b + 1] - ((h[a] * p[b - a + 1]) % MOD) + MOD) % MOD;
     }
 };
+
 
 bool is_pal(int l, int r,  hash_str &h1,  hash_str &h2) {
     int l2 = sz(h1.h) - 2 - r;
@@ -56,17 +67,16 @@ ll count_palindromes(string &s, hash_str &h1, hash_str &h2) {
 }
 
 int main() {
-    ll mod = 1e9 + 7;
     string s;
     cin >> s;
 
     //normal hash
-    hash_str h1(s, 131, mod);
+    hash_str h1(s);
 
     //reverse hash
     string rev_s = s;
     reverse(all(rev_s));
-    hash_str h2(rev_s, 131, mod);
+    hash_str h2(rev_s);
 
     ll ans = count_palindromes(s, h1, h2);
     cout << ans << ln;
