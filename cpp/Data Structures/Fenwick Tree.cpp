@@ -1,6 +1,7 @@
 
 //[1, n]
 //rangos [l, r]
+
 template <typename T>
 struct BIT {
     vector<T> ft;
@@ -41,5 +42,5 @@ struct BIT {
         }
         return pos + 1;
     }
-    //sin palabras
+    //sin palabras x
 };
