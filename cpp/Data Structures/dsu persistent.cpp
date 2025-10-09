@@ -1,5 +1,6 @@
 
-
+//Tomando de:
+//https://github.com/ShahjalalShohag/code-library/blob/main/Data%20Structures/DSU%20Partially%20Persistent.cpp
 const int MAXN = 3e5 + 9;
 
 struct DSU {
