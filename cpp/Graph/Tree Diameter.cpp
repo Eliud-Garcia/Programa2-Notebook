@@ -22,3 +22,11 @@ int main() {
     cout << diam - 1 << ln;
     return 0;
 }
+
+
+/*
+radio de un arbol = ceil(diameter / 2)
+
+radio = (es un nodo cuya distancia máxima 
+hasta cualquier otro nodo de su propio árbol sea mínima.)
+*/
