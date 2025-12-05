@@ -50,6 +50,8 @@ int qry(int l, int r, int x){
             i += S;
         }else{
             ans += (a[i] + sum[i / S] == x);
+            // en caso de moverse sobre el bloque
+            // se puede hacer con blk[i / S][i % S]
             i++;
         }
     }
