@@ -1,32 +1,42 @@
 
-const int MAX_N = 101;
-const int MAX_SUM = 1e5 + 1;
-bool dp[MAX_N + 1][MAX_SUM + 1];
+/* cantidad de formas para hacer 
+la suma x usando las monedas dadas */
+const int MAX_N = 100;
+const int MAX_SUM = 1e6 + 1;
+const int MOD = 1e9 + 7;
 
 int main() {
-    //dada una cantidad de monedas, decir todas
-    //sumas que se pueden formar con ellas
-    int n;
-    cin >> n;
-    vi coins(n);
-    for(auto &i: coins) cin >> i;
-    dp[0][0] = true;
-    forab (i, 1, n + 1) {
-        forab (curSum, 0, MAX_SUM + 1) {
-            dp[i][curSum] = dp[i - 1][curSum];
-            int prevSum = curSum - coins[i - 1];
-            if (prevSum >= 0 && dp[i - 1][prevSum]) {
-                dp[i][curSum] = true;
-            }
+    int n, x;
+    cin >> n >> x;
+
+    vector<int> c(n);
+    for (int j = 0; j < n; ++j) {
+        cin >> c[j];
+    }
+    /*
+    para formas ordenadas
+    2+2+5 == 2+5+2
+    */
+    vector<int> dp(x + 1);
+    dp[0] = 1;
+    for (int j = 0; j < n; ++j) {
+        for (int i = c[j]; i <= x; ++i) {
+            dp[i] = (dp[i - c[j]] + dp[i]) % MOD;
         }
     }
-    vi ans;
-    forab (sum, 1, MAX_SUM + 1) {
-        if (dp[n][sum])ans.pb(sum);
+    cout << dp[x] << ln;
+    /*
+        sin importar el orden
+        de las combinaciones
+        2+2+5 != 2+5+2
+    */
+    vector<int> ways(x + 1);
+    ways[0] = 1;
+    for (int j = 0; j < n; ++j) {
+        for (int i = c[j]; i <= x; ++i) {
+            ways[i] = (ways[i - c[j]] + ways[i]) % M;
+        }
     }
-    cout << sz(ans) << ln;
-    for (int sum : ans)
-        cout << sum << " ";
-    cout << ln;
+    cout << ways[x] << ln;
     return 0;
 }
