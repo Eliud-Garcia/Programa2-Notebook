@@ -102,4 +102,9 @@ that together touch all the edges.
 /*Min Path Cover (only in DAG)
  Find the minimum number of paths to cover
  each vertex on a graph
+
+ find the transitive clousure (reachability) with a bitset
+ add edge u -> v if you can reach v from u
+
+ ans = (#node - matching)
  */
