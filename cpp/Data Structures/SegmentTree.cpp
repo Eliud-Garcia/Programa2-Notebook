@@ -1,3 +1,4 @@
+
 template <typename T>
 struct STree {
     int n;
@@ -47,28 +48,6 @@ struct STree {
         st[v] = oper(st[v * 2], st[v * 2 + 1]);
     }
 
-    int count_qry(int v, int tl, int tr, int l, int r, T x) {
-        if (tl > r || tr < l)
-            return 0;
-        if (l <= tl && tr <= r) {
-            if (st[v] <= x) {
-            /*
-            >  (st[v] <= x, max(a,b))
-            >= (st[v] < x, max(a,b))
-            <  (st[v] >= x, min(a,b))
-            <= (st[v] > x, min(a,b))
-            */
-                return 0;
-            }
-            if (tl == tr)
-                return 1;
-        }
-        int tm = (tl + tr) / 2;
-        return count_qry(v * 2, tl, tm, l, r, x) + count_qry(v * 2 + 1, tm + 1, tr, l, r, x);
-    }
-    int count_qry(int a, int b, T x) {
-        return count_qry(1, 0, n - 1, a, b, x);
-    }
     void upd(int pos, T val) {
         upd(1, 0, n - 1, pos, val);
     }
