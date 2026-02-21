@@ -12,7 +12,7 @@ using namespace std;
 #define rform(i, n, m, x) for (int i = n; i >= m; i -= x)
 
 #ifdef LOCAL
-#include "debug.h"
+#include "debug.cpp"
 #else
 #define dbg(...)
 #endif
@@ -22,6 +22,9 @@ typedef vector<int> vi;
 typedef vector<bool> vb;
 typedef vector<ll> vll;
 
+template<typename T>
+using min_heap = priority_queue<T, vector<T>, greater<T>>;
+
 int main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
@@ -30,6 +33,6 @@ int main() {
         freopen("in.txt", "r", stdin);
         //freopen("out.txt", "w", stdout);
     #endif
-
+    
     return 0;
 }
