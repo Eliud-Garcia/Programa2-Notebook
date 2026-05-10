@@ -1,12 +1,13 @@
 
-
+/*para 2 modulos crear otro MOD2, otro C2 y otros arreglos h2, p2
+luego en el for calcular de la misma forma el otro
+en el get() retornar un pair {cal1, cal2}
+*/
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 
 const ll MOD = 991831889LL;
 
-//9982443539LL
-//1000000007LL
-//1000000009LL
+//9982443539LL ,  1000000007LL  ,  1000000009LL
 
 const ll C = uniform_int_distribution<ll>(0.1 * MOD, 0.9 * MOD)(rng);
 
