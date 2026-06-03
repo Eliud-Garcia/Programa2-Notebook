@@ -1,4 +1,4 @@
-// for use this structure, include Point_and_Segments.cpp
+// Traer el struct Point de Objects.cpp
 struct Polygon {
     vector<Point> P;
 
