@@ -75,3 +75,20 @@ Vector normal a un plano (3D):
 Ángulo entre dos vectores:
     θ = arccos( (u·v) / (|u| |v|) )
 */
+
+
+/*
+razones trigonometricas
+
+CO = cateto opuesto
+CA = cateto adyacente
+H = hipotenusa
+
+sin(angulo) = CO / H
+cos(angulo) = CA / H
+tan(angulo) = CO / CA
+
+sosecante(angulo) = H / CO
+secante(angulo) = H / CA
+cotangente(angulo) = CA / CO 
+*/
