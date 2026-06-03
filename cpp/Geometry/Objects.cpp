@@ -82,6 +82,24 @@ bool segmentsIntersect(const Point& a, const Point& b, const Point& c, const Poi
     return false;
 }
 
+/*
+    /| b
+   / |
+  /  |
+a/---|-c
+*/
+//angulo interno formado por las lineas ab, ac
+//retorna el angulo en radianes
+double anguloLineas(Point &a, Point &b, Point &c){
+    double ac = dist(a, c);
+    double ab = dist(a, b);
+    double bc = dist(b, c);
+
+    double a_radianes = ((ac * ac) + (ab * ab) - (bc * bc)) / (2 * ac * ab);
+    return acos(a_radianes);
+}
+
+
 //LINEA 
 struct Line {
     Point p;   // punto en la línea
