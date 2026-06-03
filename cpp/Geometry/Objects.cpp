@@ -1,23 +1,3 @@
-
-//LINEA
-struct Line {
-    Point p;   // punto en la línea
-    Point v;   // vector director
-
-    Line() {}
-    Line(Point _p, Point _v) : p(_p), v(_v) {}
-
-    // Proyección de un punto sobre la línea
-    Point proj(const Point& a) const {
-        return p + v * ( (a - p).dot(v) / v.norm2() );
-    }
-
-    // Distancia cuadrada de un punto a la línea
-    double sqDist(const Point& a) const {
-        return ((a - p).cross(v) * (a - p).cross(v)) / v.norm2();
-    }
-};
-
 //PUNTO
 const double EPS = 1e-9;
 const double PI = acos(-1.0);
@@ -52,4 +32,23 @@ struct Point {
     }
     //angle align with x axis
     double angle() const { return atan2(y, x); }
+};
+
+//LINEA 
+struct Line {
+    Point p;   // punto en la línea
+    Point v;   // vector director
+
+    Line() {}
+    Line(Point _p, Point _v) : p(_p), v(_v) {}
+
+    // Proyección de un punto sobre la línea
+    Point proj(const Point& a) const {
+        return p + v * ( (a - p).dot(v) / v.norm2() );
+    }
+
+    // Distancia cuadrada de un punto a la línea
+    double sqDist(const Point& a) const {
+        return ((a - p).cross(v) * (a - p).cross(v)) / v.norm2();
+    }
 };
