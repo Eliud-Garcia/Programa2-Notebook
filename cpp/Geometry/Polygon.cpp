@@ -5,7 +5,7 @@ struct Polygon {
     Polygon() {}
     Polygon(const vector<Point>& pts) : P(pts) {}
 
-    int n() const { return (int)P.size(); }
+    int n() const { return sz(P); }
 
     void close() {
         if (P.empty()) return;
@@ -18,6 +18,13 @@ struct Polygon {
             A += P[i].cross(P[j]);
         }
         return fabs(A) / 2.0;
+    }
+    double area2() const {
+        double A = 0;
+        for(int i = 0; i < n(); i++){
+            A += P[i].cross(P[(i + 1) % sz(P)]);
+        }
+        return abs(A);
     }
 
     // Signed area (positive = CCW)
@@ -51,6 +58,26 @@ struct Polygon {
             if (intersect) inside = !inside;
         }
         return inside ? 1 : 0;
+    }
+    
+    /*Para la cantidad de puntos 
+    usar long long en Point y el metodo area2()*/
+    //coordenadas (x, y) enteras en el borde del poligono
+    ll puntosEnterosBordes(){
+        ll bordes = 0;
+        for(int i = 0; i < sz(P); i++){
+            Point df = P[i] - P[(i + 1) % sz(P)];
+            bordes += __gcd(abs(df.x), abs(df.y));
+        }
+        return bordes;
+    }
+    //coordenadas (x, y) enteras dentro del poligono
+    ll puntosEnterosInternos(){
+        ll bordes = puntosEnterosBordes();
+        ll area_poly = area2();
+        // area = pts_dentro + pts_borde / 2 - 1
+        // area - pts_borde / 2 + 1 = pts_dentro
+        return (area_poly - bordes) / 2LL + 1;
     }
 };
 
@@ -96,30 +123,5 @@ double polygonDiameter(const vector<Point>& P) {
     return maxDist;
 }
 
-int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-
-    vector<Point> pts = {
-        {0,0}, {1,2}, {2,1}, {4,4}, {0,4}, {3,0}
-    };
-
-    //Convex Hull
-    vector<Point> hull = convexHull(pts);
-    cout << "Convex Hull:\n";
-    for (auto &p : hull) cout << "(" << p.x << "," << p.y << ") ";
-    cout << "\n";
-
-    Polygon poly(hull);
-    cout << "Área: " << poly.area() << "\n";
-
-    // poin in polygon test
-    Point test(2, 2);
-    int inside = poly.containsPoint(test);
-    cout << "El punto (2,2) está: " 
-         << (inside == 1 ? "Dentro" : inside == 2 ? "En el borde" : "Fuera") << "\n";
-
-    cout << "Diámetro del polígono: " << polygonDiameter(hull) << "\n";
-}
 
 
