@@ -51,6 +51,28 @@ bool onLine(Point &a, Point &b, Point &c){
     return sgn(orientation(a, b, c)) == 0;
 }
 
+inline bool up (const Point &p) {
+  return p.y < 0 || (p.y == 0 && p.x < 0);
+}
+
+/*
+El hemisferio superior va antes que el inferior.
+counter-clockwise desde el plano superior
+*/
+bool cmp(const Point &a, const Point &b) {
+    if(up(a) == up(b)){
+        //a está antes que b en sentido antihorario
+        return a.cross(b) > 0;
+    }
+    return up(a) < up(b);
+}
+
+//a y b estan en la misma linea 
+//y en el mismo hemisferio (superior/inferior)?
+bool en_linea_igual_hemisferio(Point a, Point b){
+    return (!cmp(a, b) && !cmp(b, a));
+}
+
 //distance from point p to line ab
 double distancePointLine(const Point& a, const Point& b, const Point& p) {
     return fabs((b - a).cross(p - a)) / dist(a, b);
