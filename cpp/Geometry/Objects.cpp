@@ -46,6 +46,11 @@ double orientation(const Point& a, const Point& b, const Point& c) {
     return (b - a).cross(c - a);
 }
 
+//valida si el punto C esta entre la linea AB
+bool onLine(Point &a, Point &b, Point &c){
+    return sgn(orientation(a, b, c)) == 0;
+}
+
 //distance from point p to line ab
 double distancePointLine(const Point& a, const Point& b, const Point& p) {
     return fabs((b - a).cross(p - a)) / dist(a, b);
