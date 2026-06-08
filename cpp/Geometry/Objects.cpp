@@ -109,21 +109,13 @@ bool segmentsIntersect(const Point& a, const Point& b, const Point& c, const Poi
     return false;
 }
 
-/*
-    /| b
-   / |
-  /  |
-a/---|-c
-*/
-//angulo interno formado por las lineas ab, ac
-//retorna el angulo en radianes
-double anguloLineas(Point &a, Point &b, Point &c){
-    double ac = dist(a, c);
-    double ab = dist(a, b);
-    double bc = dist(b, c);
-
-    double a_radianes = ((ac * ac) + (ab * ab) - (bc * bc)) / (2 * ac * ab);
-    return acos(a_radianes);
+// calcula el angulo ABC usando los vectores BA y BC
+// B es el vertice
+double get_angle(Point A, Point B, Point C) {
+    Point BA = B - A, BC = B - C;
+    double dot = BA.dot(BC);
+    double cross = BA.cross(BC);
+    return atan2(abs(cross), dot);//angulo en radianes
 }
 
 
