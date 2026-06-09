@@ -200,6 +200,29 @@ int circleCircle(Point o1, double r1, Point o2, double r2, pair<Point, Point>& o
     return 2;
 }
 
+double sq(double a) {
+    return a * a;
+}
+
+//area de la interseccion de 2 circulos
+//recibe los dos radios  y la distancia entre los centros
+double circlecircle_area_inter(double r1, double r2, double d) {
+    if (d >= r1 + r2) return 0.0; // sin interseccion
+    //circulo dentro del otro
+    if (d <= abs(r1 - r2)) return M_PI * sq(min(r1, r2));
+
+    auto clamp = [](double v) { return max(-1.0, min(1.0, v)); };
+
+    double cos1 = clamp((sq(d) + sq(r1) - sq(r2)) / (2.0 * d * r1));
+    double cos2 = clamp((sq(d) + sq(r2) - sq(r1)) / (2.0 * d * r2));
+    double inside = max(
+        0.0, (-d + r1 + r2) * (d + r1 - r2) * (d - r1 + r2) * (d + r1 + r2));
+
+    double ans = sq(r1) * acos(cos1) + sq(r2) * acos(cos2) - 0.5 * sqrt(inside);
+
+    return ans;
+}
+
 // Tangentes comunes entre dos círculos
 // inner = false → tangentes externas
 // inner = true  → tangentes internas
