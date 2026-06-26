@@ -142,6 +142,28 @@ Point perp(const Point& a) {
     return Point(-a.y, a.x);
 }
 
+//Línea que pasa por los puntos A y B
+Line two_points(Point a, Point b){
+    return Line(a, b - a);
+}
+
+//crea una linea paralela a L con x de distancia
+Line parallel(const Line& l, double x) {
+    double len = sqrt(l.v.norm2());
+    Point n(-l.v.y / len, l.v.x / len);
+    Point p_nueva = l.p + n * x;
+    return Line(p_nueva, l.v);
+}
+
+//lado en el que está el punto
+int side(Line l, Point p){
+    Point w = p - l.p;
+    double dir = l.v.cross(w);
+    if(dir > 0) return -1; //izq
+    if(dir < 0) return 1; //der
+    return 0; //colineal
+}
+
 
 //Circuncentro de un triángulo (pasa por A, B, C)
 Point circumCenter(Point a, Point b, Point c) {
