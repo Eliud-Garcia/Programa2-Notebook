@@ -1,57 +1,89 @@
+using i128 = __int128;
 
-struct line {
-    long long m, b;
-    line (long long a, long long c) : m(a), b(c) {}
-    long long eval(long long x) {
-        return m * x + b;
-    }
+struct Line {
+    ll m, b; // y = m*x + b
+    ll eval(ll x) const { return m * x + b; }
 };
 
-long double inter(line a, line b) {
-    long double den = a.m - b.m;
-    long double num = b.b - a.b;
-    return num / den;
+bool bad(const Line& l1, const Line& l2, const Line& l3) {
+    return (i128)(l3.b - l1.b) * (l1.m - l2.m) <=
+           (i128)(l2.b - l1.b) * (l1.m - l3.m);
 }
 
-/**
- *  min m_i * x_j + b_i, for all i.
- *     x_j <= x_{j + 1}
- *     m_i >= m_{j + 1}
- * */
-struct ordered_cht {
-    vector<line> ch;
-    int idx; // id of last "best" in query
-    ordered_cht() {
-        idx = 0;
-    }
+struct CHT {
+    vector<Line> hull;
+    int ptr = 0;
 
-    void insert_line(long long m, long long b) {
-        line cur(m, b);
-        // new line's slope is less than all the previous
-        while (ch.size() > 1 &&
-                (inter(cur, ch[ch.size() - 2]) >= inter(cur, ch[ch.size() - 1]))) {
-            // f(x) is better in interval [inter(ch.back(), cur), inf)
-            ch.pop_back();
+    void add(ll m, ll b) {
+        Line l{m, b};
+        if (!hull.empty() && hull.back().m == m) {
+            if (hull.back().b <= b) return; // la nueva no aporta
+            hull.pop_back();
         }
-
-        ch.push_back(cur);
+        while (sz(hull) >= 2 &&
+               bad(hull[sz(hull) - 2], hull.back(), l))
+            hull.pop_back();
+        hull.push_back(l);
+        if (ptr >= sz(hull)) ptr = sz(hull) - 1;
     }
 
-    long long eval(long long x) { // minimum
-        // current x is greater than all the previous x,
-        // if that is not the case we can make binary search.
-        idx = min<int>(idx, ch.size() - 1);
-        while (idx + 1 < (int)ch.size() && ch[idx + 1].eval(x) <= ch[idx].eval(x))
-            idx++;
-
-        return ch[idx].eval(x);
+    ll query(ll x) {
+        if (ptr >= sz(hull)) ptr = sz(hull) - 1;
+        while (ptr + 1 < sz(hull) &&
+               hull[ptr + 1].eval(x) <= hull[ptr].eval(x))
+            ptr++;
+        return hull[ptr].eval(x);
     }
 };
 
+int main() {
+    ll n, x;
+    cin >> n >> x;
+    ll s[n], f[n];
+    for(int i = 0; i < n; i++) cin >> s[i];
+    for(int i = 0; i < n; i++) cin >> f[i];
 
-/**
- *  Dynammic convex hull trick
- * */
+    CHT ch;
+    vector<ll> dp(n);
+    ch.add(x, 0);
+    for(int j = 0; j < n; j++){
+        dp[j] = ch.query(s[j]);
+        ch.add(f[j], dp[j]);
+    }
+    cout << dp[n - 1] << ln;
+    return 0;
+}
+/*
+https://cses.fi/problemset/task/2084/
+
+dp[j] = min(dp[j], dp[i] + f[i] * s[j])
+
+y = mx + b
+mi = f[i]
+b = dp[i]
+
+x es siempre el factor que depende del 
+índice que se está calculando ahora mismo 
+en este caso es j
+En el término cruzado, la parte que depende de j es s[j].
+
+dp[j] = ch.query(x)
+dp[j] = ch.query(s[j])
+
+en caso de que cost(i, j) sea diferente, tratar 
+de extender y organizar
+*/
+
+
+/*
+***************************
+Dynammic convex hull trick
+
+Guarda las líneas ordenadas por 
+pendiente m ascendente dentro del multiset.
+CHT para maximo
+*************************
+*/
 
 typedef long long int64;
 typedef long double float128;
@@ -99,6 +131,24 @@ struct HullDynamic : public multiset<Line> { // will maintain upper hull for max
         return l.m * x + l.b;
     }
 };
+
+int main() {
+    ll n, x;
+    cin >> n >> x;
+    ll s[n], f[n];
+    for(int i = 0; i < n; i++) cin >> s[i];
+    for(int i = 0; i < n; i++) cin >> f[i];
+
+    HullDynamic ch;
+    vector<ll> dp(n);
+    ch.insert_line(-x, -0); //negado para min
+    for(int j = 0; j < n; j++){
+        dp[j] = -ch.eval(s[j]);
+        ch.insert_line(-f[j], -dp[j]);
+    }
+    cout << dp[n - 1] << ln;
+    return 0;
+}
 
 /**
  *  Problems:
