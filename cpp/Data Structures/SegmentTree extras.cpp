@@ -6,21 +6,20 @@ inicializar con 1s el vector
 
 int find_kth(int v, int tl, int tr, int k) {
     if (k > st[v])
-        return -1;
+    return -1;
     if (tl == tr)
-        return tl;
+    return tl;
     int tm = (tl + tr) / 2;
     if (st[L(v)] >= k)
-        return find_kth(L(v), tl, tm, k);
+    return find_kth(L(v), tl, tm, k);
     else
-        return find_kth(R(v), tm + 1, tr, k - st[L(v)]);
+    return find_kth(R(v), tm + 1, tr, k - st[L(v)]);
 }
 
-/*
-SegmentTree Bracket
+/*------------------------------
+STree bracket
 solo es modificar lo siguiente
-*/
-
+------------------------------*/
 struct node {
     int open, closed, len;
     node() : open(0), closed(0), len(0){};
@@ -43,20 +42,16 @@ T oper(T a, T b) {
 }
 //para crearlo es en base a un string
 vector<node> a(sz(s));
-
 for(int i = 0; i < sz(s); i++){
     a[i] = node(s[i]);
 }
-
 STree<node> st(a);
-
 //para upd
 st.upd(i, node(s[i]));
 
-/*
+/*------------------------
 para maximum subarray sum
-*/
-
+------------------------*/
 struct node {
     ll val, sf, pf, ans;
     node() : val(0), sf(0), pf(0), ans(0) {}
@@ -80,7 +75,7 @@ T oper(T a, T b) {
 
 vector<int> a(n);
 for(int i = 0; i < n; i++) 
-    cin >> a[i];
+cin >> a[i];
 
 vector<node> aux(n);
 for(int i = 0; i < n; i++){
@@ -88,3 +83,36 @@ for(int i = 0; i < n; i++){
 }
 
 STree<node> st(aux);
+
+/*-------------------------------
+para validar 
+si un rangos (l, r) es palindromo
+con updates 
+--------------------------------*/
+
+//#usar UnitHash de strings  
+bool is_pal(int l, int r,  int n, STree<UnitHash> &h1,  STree<UnitHash> &h2) {
+    return (h1.query(l, r).h == h2.query(n - r - 1, n - l - 1).h);
+}
+//para crear
+vector<UnitHash> a(n), b(n);
+forn(i, n){
+    a[i] = UnitHash(s[i] * 1LL, B);
+    b[n - i - 1] = UnitHash(s[i] * 1LL, B);
+    //B es la base del UnitHash
+}
+STree<UnitHash> st1(a); //normal
+STree<UnitHash> st2(b); //reverse
+
+if(t == 1){ //update
+    int i;
+    char x; 
+    cin >> i >> x;
+    st1.upd(i - 1, UnitHash(x * 1LL, B));
+    st2.upd(n - i, UnitHash(x * 1LL, B));
+}else{ //query
+    int l, r;
+    cin >> l >> r;
+    bool ans = is_pal(l - 1, r - 1, n, st1, st2);
+    cout << (ans ? "YES" : "NO") << ln;
+}
